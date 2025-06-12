@@ -1,11 +1,12 @@
 import { Button } from "antd";
+import { BrowserRouter as Router } from "react-router-dom";
+import AppRouter from "./router";
 
 function App() {
   return (
-    <>
-      <p className="text-red-500">test</p>
-      <Button type="primary">test</Button>
-    </>
+    <Router>
+      <AppRouter />
+    </Router>
   );
 }
 
