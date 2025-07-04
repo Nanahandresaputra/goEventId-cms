@@ -1,18 +1,76 @@
-import React from "react";
+import { Button, Form } from "antd";
+import InputPwd from "../../components/atoms/form/inputPwd";
+import InputText from "../../components/atoms/form/inputText";
+import { goeBg, logo } from "../../assets/images";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
   return (
-    <section className="grid grid-cols-5 h-screen bg-[#2C4B3C]">
-      <div
-        className="col-span-3"
-        style={{
-          backgroundImage: `url(/src/assets/images/bg-wave.png)`,
-          backgroundSize: "cover",
-        }}
-      >
-        test
+    <section className="w-full h-full grid grid-cols-2 bg-[#063127] ">
+      <div className="w-full h-full absolute bg-auth-desk" />
+      <div className="col-span-1  flex justify-end items-center  h-screen relative">
+        <div className="absolute top-10 left-10 flex space-x-3 items-center">
+          <img src={logo} alt="vend-logo" className="h-16 " />
+          <div>
+            <p className="text-gray-200 font-semibold text-xl">GoEventID</p>
+            <p className="text-gray-200 font-semibold text-base">
+              Management System
+            </p>
+          </div>
+        </div>
+        <div className="rounded-md bg-white p-7 space-y-10 lg:w-9/12 2xl:w-7/12 relative">
+          <div>
+            <p className="font-semibold text-2xl">Hai, Selamat Datang!</p>
+            <p className="text-[#00000080]">
+              Masuk dengan akunmu, dan nikmati kemudahannya
+            </p>
+          </div>
+          <Form
+            // form={}
+            autoComplete="off"
+            className="space-y-8"
+            onFinish={() => navigate("/desktop/manajemen-acara")}
+          >
+            <InputText
+              required
+              name={"username"}
+              size={"large"}
+              placeholder={"Masukan Username"}
+            />
+            <InputPwd
+              name={"password"}
+              size={"large"}
+              required
+              placeholder={"Masukan Password"}
+            />
+            <Form.Item className="w-full">
+              <Button
+                type="primary"
+                className="w-full text-xl font-semibold py-5"
+                // onClick={navigate("/desktop/manajemen-acara")}
+                // loading={}
+                htmlType="submit"
+              >
+                Masuk
+              </Button>
+            </Form.Item>
+          </Form>
+        </div>
       </div>
-      <div className="col-span-2">test</div>
+      <div className="col-span-1 h-screen">
+        <img
+          src={goeBg}
+          className="h-screen object-cover w-full"
+          alt="vend-machine"
+        />
+      </div>
+
+      <div className="absolute flex justify-center w-full bottom-[2vh]">
+        <p className="text-[#949494] font-semibold">
+          Powered by Nana Handre Saputra |{/* v{packageJson.version} */}
+        </p>
+      </div>
     </section>
   );
 };

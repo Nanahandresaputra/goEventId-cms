@@ -1,0 +1,27 @@
+.input-pwd input::placeholder {
+  color: white !important;
+  opacity: 0.5 !important;
+}
+
+.input-pwd .anticon
+/* .ant-input-password-icon */ {
+  color: white !important;
+  opacity: 0.5 !important;
+}
+
+.select-bg-dark .ant-select-selector {
+  background: #0000004d !important;
+  color: white !important;
+  border: 1px solid #ffffff73 !important;
+}
+
+.select-bg-gray .ant-select-selector {
+  background: #454239 !important;
+  color: white !important;
+  border: 1px solid #ffffff73 !important;
+}
+
+.select-holder .ant-select-selection-placeholder {
+  color: white !important;
+  opacity: 0.5 !important;
+}
