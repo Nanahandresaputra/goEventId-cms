@@ -24,7 +24,9 @@ const Login = () => {
         dispatch(loginAction({ body }))
           .then((res) => {
             console.log({ res });
-            // navigate("/desktop/manajemen-acara");
+            if (res?.meta?.requestStatus === "fulfilled") {
+              navigate("/desktop/manajemen-acara");
+            }
             if (res?.error?.message === "email or password invalid!") {
               formLogin.setFields([
                 {

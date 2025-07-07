@@ -18,6 +18,13 @@ export const interceptorsUtils = () => {
     (error) => {
       if (error?.response?.data) {
         toast.error(error?.response?.data?.message);
+        if (
+          error?.response?.statusCode === 401 &&
+          error?.response?.message === "Unauthorized"
+        ) {
+          localStorage.clear();
+          window.location.href = "/login";
+        }
       } else {
         toast.error("Terjadi kesalahan, mohon coba beberapa saat lagi!");
       }
@@ -31,14 +38,14 @@ export const interceptorsUtils = () => {
       //   ) {
 
       //     sessionStorage.clear();
-      //     localStorage.clear();
-      //     window.location.href = "/login";
+      // localStorage.clear();
+      // window.location.href = "/login";
       //   }
       // } else {
       //   toast.error("Terjadi kesalahan, mohon coba beberapa saat lagi!");
       // }
 
-      console.log(error);
+      console.log(error, "--------- error else");
       return Promise.reject(error);
     }
   );

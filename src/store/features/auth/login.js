@@ -11,10 +11,10 @@ export const loginAction = createAsyncThunk("auth/login", async ({ body }) => {
     authLoginApi({ body })
       .then((res) => {
         console.log("res action --->", res);
+        localStorage.setItem("token", res?.token);
         resolve(res.data);
       })
       .catch((err) => {
-        console.log("res action err --->", err);
         reject(err);
       });
   });

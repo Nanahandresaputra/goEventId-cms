@@ -1,1 +1,2 @@
-VITE_BASE_URL=http://localhost:8080/goEventId/api/v1
+VITE_BASE_URL=
+VITE_SECRET_KEY=

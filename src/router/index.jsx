@@ -1,5 +1,5 @@
 import React from "react";
-import { useRoutes } from "react-router-dom";
+import { Navigate, useRoutes } from "react-router-dom";
 import Login from "../pages/auth";
 import ManagementAcara from "../pages/management/acara";
 import DesktopApp from "../layout";
@@ -7,17 +7,35 @@ import ManagementPenyelenggara from "../pages/management/penyelenggara";
 import ManagementUsers from "../pages/management/user";
 import ReportingPenjualan from "../pages/reporting/penjualan";
 
+const PrivateRouterDesktop = ({ children }) => {
+  const token = localStorage.token;
+  if (token) {
+    return children;
+  } else {
+    return <Navigate to={"/login"} />;
+  }
+};
+
+const PrivateAuth = ({ children }) => {
+  const token = localStorage.token;
+
+  if (token) {
+    return <Navigate to={"/desktop/manajemen-acara"} />;
+  } else {
+    return children;
+  }
+};
+
 const AppRouter = () => {
   const desktopRoutes = [
     {
       path: "/desktop",
       element: (
-        // <PrivateRouterDesktop>
-        <DesktopApp />
-        // </PrivateRouterDesktop>
+        <PrivateRouterDesktop>
+          <DesktopApp />
+        </PrivateRouterDesktop>
       ),
       children: [
-        // { path: "manajemen-shift-pengguna", element: <MangementUserShift /> },
         { path: "manajemen-acara", element: <ManagementAcara /> },
         {
           path: "manajemen-penyelenggara",
@@ -35,11 +53,19 @@ const AppRouter = () => {
     },
   ];
   const routers = useRoutes([
-    ...desktopRoutes,
+    {
+      path: "/",
+      element: <Navigate to={"/login"} />,
+    },
     {
       path: "/login",
-      element: <Login />,
+      element: (
+        <PrivateAuth>
+          <Login />
+        </PrivateAuth>
+      ),
     },
+    ...desktopRoutes,
   ]);
 
   return routers;
