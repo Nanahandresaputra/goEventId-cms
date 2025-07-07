@@ -3,6 +3,7 @@ import MainContentAcara from "../../../components/management/acara/main-content"
 import LayoutCanvas from "../../../components/atoms/layout-canvas";
 import ExtraHeaderAcara from "../../../components/management/acara/extra-header";
 import DetailContentAcara from "../../../components/management/acara/detail-content";
+import HeaderFilterAcara from "../../../components/management/acara/header-filter-acara";
 
 const ManagementAcara = () => {
   return (
@@ -16,6 +17,7 @@ const ManagementAcara = () => {
       )}
       childMain={() => (
         <section className="space-y-4 h-3/4 ">
+          <HeaderFilterAcara />
           <MainContentAcara profileDataLevel={"test"} />
         </section>
       )}

@@ -1,5 +1,6 @@
 import { Form, DatePicker } from "antd";
 const { RangePicker } = DatePicker;
+import "./index.css";
 
 /**
   Props

@@ -108,7 +108,7 @@ const MainContentAcara = () => {
         //   onMouseEnter: (e) => e.stopPropagation(),
         // })}
 
-        scroll={{ y: "calc(65vh - 4em)", x: true }}
+        scroll={{ y: "calc(57vh - 4em)", x: true }}
       />
     </section>
   );

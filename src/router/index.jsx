@@ -5,6 +5,7 @@ import ManagementAcara from "../pages/management/acara";
 import DesktopApp from "../layout";
 import ManagementPenyelenggara from "../pages/management/penyelenggara";
 import ManagementUsers from "../pages/management/user";
+import ReportingPenjualan from "../pages/reporting/penjualan";
 
 const AppRouter = () => {
   const desktopRoutes = [
@@ -25,6 +26,10 @@ const AppRouter = () => {
         {
           path: "manajemen-user",
           element: <ManagementUsers />,
+        },
+        {
+          path: "reporting-penjualan",
+          element: <ReportingPenjualan />,
         },
       ],
     },

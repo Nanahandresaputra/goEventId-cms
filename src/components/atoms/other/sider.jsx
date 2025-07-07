@@ -25,7 +25,7 @@ const Asider = () => {
     .replace(
       pathname.includes("manajemen")
         ? "/desktop/manajemen"
-        : "/desktop/laporan",
+        : "/desktop/reporting",
       ""
     )
     .split("-")
@@ -37,7 +37,7 @@ const Asider = () => {
   const items = [
     //   getItem("Management", "1", <PieChartOutlined />),
     getItem({
-      key: "management",
+      key: "manajemen",
       label: "Manajemen",
       icon: <ManagementIcon fill="white" className="w-5 h-5" />,
       children: [
@@ -56,7 +56,7 @@ const Asider = () => {
           },
         }),
         getItem({
-          key: "users",
+          key: "user",
           label: "User",
           onClick: () => {
             navigate("/desktop/manajemen-user");
@@ -70,10 +70,10 @@ const Asider = () => {
       icon: <ReportIcon fill="white" className="w-5 h-5" />,
       children: [
         getItem({
-          key: "transaksi",
-          label: "Transaksi",
+          key: "penjualan",
+          label: "Penjualan",
           onClick: () => {
-            navigate("/desktop/laporan-transaksi");
+            navigate("/desktop/reporting-penjualan");
           },
         }),
       ],
