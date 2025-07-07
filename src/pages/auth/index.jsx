@@ -3,9 +3,46 @@ import InputPwd from "../../components/atoms/form/inputPwd";
 import InputText from "../../components/atoms/form/inputText";
 import { goeBg, logo } from "../../assets/images";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { loginAction } from "../../store/features/auth/login";
 
 const Login = () => {
+  const { isLoading } = useSelector((state) => state.authLogin);
+
+  const [formLogin] = Form.useForm();
+
+  const dispatch = useDispatch();
+
   const navigate = useNavigate();
+
+  const handleLoginDesktop = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    formLogin
+      .validateFields()
+      .then((body) => {
+        dispatch(loginAction({ body }))
+          .then((res) => {
+            console.log({ res });
+            // navigate("/desktop/manajemen-acara");
+            if (res?.error?.message === "email or password invalid!") {
+              formLogin.setFields([
+                {
+                  name: "email",
+                  errors: [""],
+                },
+                {
+                  name: "password",
+                  errors: ["username atau password salah!"],
+                },
+              ]);
+            }
+          })
+          .catch(() => {});
+      })
+      .catch(() => {});
+  };
+
   return (
     <section className="w-full h-full grid grid-cols-2 bg-[#063127] ">
       <div className="w-full h-full absolute bg-auth-desk" />
@@ -27,16 +64,17 @@ const Login = () => {
             </p>
           </div>
           <Form
-            // form={}
+            form={formLogin}
             autoComplete="off"
             className="space-y-8"
-            onFinish={() => navigate("/desktop/manajemen-acara")}
+            // onFinish={handleLoginDesktop}
           >
             <InputText
               required
-              name={"username"}
+              name={"email"}
               size={"large"}
-              placeholder={"Masukan Username"}
+              type="email"
+              placeholder={"Masukan Email"}
             />
             <InputPwd
               name={"password"}
@@ -48,8 +86,8 @@ const Login = () => {
               <Button
                 type="primary"
                 className="w-full text-xl font-semibold py-5"
-                // onClick={navigate("/desktop/manajemen-acara")}
-                // loading={}
+                onClick={handleLoginDesktop}
+                loading={isLoading}
                 htmlType="submit"
               >
                 Masuk
