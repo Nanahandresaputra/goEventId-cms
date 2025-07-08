@@ -8,8 +8,8 @@ export const interceptorsUtils = () => {
     (res) => {
       console.log(res, "suceess ------");
       if (
-        ![201, 200].includes(res.data?.statusCode)
-        // && res.data?.message !== "email or password invalid!"
+        ![201, 200].includes(res.data?.statusCode) &&
+        res.data?.message !== "email or password invalid!"
       ) {
         toast.error(res.data?.message);
       }

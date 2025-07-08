@@ -1,45 +1,35 @@
-import React from "react";
+import React, { useContext } from "react";
 import KeyLabelText from "../../atoms/other/key-label-text";
 import { Table, Tag } from "antd";
+import { ContextPenyelenggara } from "../../../pages/management/penyelenggara";
+import { formatDate } from "../../../helpers/date-format";
+import StatusAcaraTag from "../../atoms/generate-tag/status-acara";
 
 const DetailContentPenyelenggara = () => {
+  const { selectedPenyelenggara } = useContext(ContextPenyelenggara);
   const columns = [
     {
       title: "Acara",
-      dataIndex: "acara",
-      key: "acara",
+      dataIndex: "nama_acara",
+      key: "nama_acara",
       //   render: (row) => <p className="font-semibold">{row?.toUpperCase()}</p>,
     },
     {
       title: "Tanggal",
-      dataIndex: "tanggal",
-      key: "tanggal",
-      //   render: (row) => <p className="font-semibold">{row?.toUpperCase()}</p>,
+      dataIndex: "waktu_acara",
+      key: "waktu_acara",
+      render: (row) => formatDate({ time: row }),
     },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
       width: "15%",
-      render: (row) =>
-        row === 1 ? (
-          <Tag color="success" className="w-full text-center py-1">
-            Publish
-          </Tag>
-        ) : (
-          <Tag className="w-full text-center py-1" color="error">
-            Draft
-          </Tag>
-        ),
+      render: (row) => <StatusAcaraTag text={row} />,
     },
   ];
 
-  const dummyData = [...Array(60)].map((_, idx) => ({
-    key: idx,
-    acara: `Nama Acara ${idx}`,
-    tanggal: "24 Jan 2025 18:40",
-    status: 1,
-  }));
+  const dataSource = selectedPenyelenggara?.acara;
 
   return (
     <section className="space-y-8">
@@ -47,15 +37,18 @@ const DetailContentPenyelenggara = () => {
         Detail Penyelenggara
       </h1>
       <div className="space-y-1">
-        <KeyLabelText keyVal="Penyelenggara" value="Nama Penyelenggara 1" />
-        <KeyLabelText keyVal="Email" value="penyelenggara1@mail.com" />
+        <KeyLabelText
+          keyVal="Penyelenggara"
+          value={selectedPenyelenggara?.nama}
+        />
+        <KeyLabelText keyVal="Email" value={selectedPenyelenggara?.email} />
       </div>
       <h1 className="text-[#14182999] font-semibold text-xl">List Acara</h1>
 
       <Table
         columns={columns}
         size="small"
-        dataSource={dummyData}
+        dataSource={dataSource}
         pagination={{
           pageSizeOptions: [5, 10, 15, 20, 30, 50, 100],
           showSizeChanger: true,

@@ -16,7 +16,7 @@ const ManagementUsers = () => {
       )}
       childMain={() => (
         <section className="space-y-4 h-3/4 ">
-          <MainContentUsers profileDataLevel={"test"} />
+          <MainContentUsers />
         </section>
       )}
     />

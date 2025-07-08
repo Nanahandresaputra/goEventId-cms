@@ -1,12 +1,22 @@
 import { Button, Table, Tag } from "antd";
-import React from "react";
+import React, { useCallback, useContext, useEffect, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getPenyelenggaraAction } from "../../../store/features/management/penyelenggara";
+import { ContextPenyelenggara } from "../../../pages/management/penyelenggara";
 
 const MainContentPenyelenggara = () => {
+  const { penyelenggaraList, isLoadingGet } = useSelector(
+    (state) => state.penyelenggara
+  );
+  const { setSelectedPenyelenggara } = useContext(ContextPenyelenggara);
+
+  const dispatch = useDispatch();
+
   const columns = [
     {
       title: "Penyelenggara",
-      dataIndex: "penyelenggara",
-      key: "penyelenggara",
+      dataIndex: "nama",
+      key: "nama",
       // render: (row) => <p className="font-semibold">{row?.toUpperCase()}</p>,
     },
     {
@@ -31,11 +41,22 @@ const MainContentPenyelenggara = () => {
     },
   ];
 
-  const dataSource = [...Array(28)].map((_, idx) => ({
-    key: idx,
-    penyelenggara: `Nama Penyelenggara ${idx + 1}`,
-    email: `penyelenggara${idx + 1}@mail.com`,
-  }));
+  console.log({ penyelenggaraList });
+
+  const getDatas = useCallback(() => {
+    dispatch(getPenyelenggaraAction()).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    getDatas();
+  }, []);
+
+  const dataSource = useMemo(() => {
+    if (penyelenggaraList?.length > 0) {
+      setSelectedPenyelenggara(penyelenggaraList[0]);
+    }
+    return penyelenggaraList;
+  }, [penyelenggaraList]);
 
   // const handleSubmit = () => {
 
@@ -65,6 +86,7 @@ const MainContentPenyelenggara = () => {
           <FormModalCompany />
         </Modal> */}
       <Table
+        loading={isLoadingGet}
         columns={columns}
         size="large"
         dataSource={dataSource}

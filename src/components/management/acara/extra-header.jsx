@@ -5,12 +5,13 @@ import ButtonAdd from "../../atoms/other/btn-add";
 const ExtraHeaderAcara = ({
   onChangeSearch = () => {},
   onClickBtnAdd = () => {},
+  placeholder = "Cari berdasarkan nama",
 }) => {
   return (
     <section className="flex items-center !m-0 ">
       <InputText
         name={"search"}
-        placeholder={"Cari berdasarkan nama"}
+        placeholder={placeholder}
         onChange={onChangeSearch}
         className={"!m-0"}
         prefix={<SearchIcon width="15" height="15" />}

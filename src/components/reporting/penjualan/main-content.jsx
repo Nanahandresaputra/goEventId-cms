@@ -1,54 +1,59 @@
 import { Button, Table, Tag } from "antd";
-import React from "react";
+import React, { useCallback, useContext, useEffect, useMemo } from "react";
 import { getColumnWidth } from "../../../helpers/table-column-width";
+import { useDispatch, useSelector } from "react-redux";
+import { getReportingPenjualanAction } from "../../../store/features/reporting/penjualan";
+import { formatDate } from "../../../helpers/date-format";
+import StatusAcaraTag from "../../atoms/generate-tag/status-acara";
+import { formatter } from "../../../helpers/formatter";
+import { ContextReportingPenjualan } from "../../../pages/reporting/penjualan";
 
 const MainContentPenjualan = () => {
-  const dataSource = [...Array(28)].map((_, idx) => ({
-    key: idx,
-    acara: "Indonesia vs Bahrain FWC Qualifer 2026",
-    tanggal: "22 Januari 2025",
-    tiketTerjual: 11,
-    pendapatan: 22000,
-    status: 1,
-  }));
+  const { penjualanList } = useSelector((state) => state.penjualan);
+  const { setDetailPenjualan } = useContext(ContextReportingPenjualan);
+
+  const dataSource = useMemo(() => {
+    if (penjualanList?.length > 0) {
+      setDetailPenjualan({
+        ...penjualanList[0]?.details,
+        nama_acara: penjualanList[0].nama_acara,
+      });
+    }
+    return penjualanList;
+  }, [penjualanList]);
+
   const columns = [
     {
       title: "Acara",
-      dataIndex: "acara",
-      key: "acara",
+      dataIndex: "nama_acara",
+      key: "nama_acara",
     },
     {
       title: "Tanggal",
-      dataIndex: "tanggal",
-      key: "tanggal",
+      dataIndex: "waktu_acara",
+      key: "waktu_acara",
+      render: (row) => formatDate({ time: row }),
     },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      render: (row) =>
-        row === 1 ? (
-          <Tag color="success" className="w-full text-center py-1">
-            Publish
-          </Tag>
-        ) : (
-          <Tag className="w-full text-center py-1" color="error">
-            Draft
-          </Tag>
-        ),
+      render: (row) => <StatusAcaraTag text={row} />,
     },
     {
       title: "Total Tiket Terjual",
-      dataIndex: "tiketTerjual",
-      key: "tiketTerjual",
+      dataIndex: "totalTiketTerjual",
+      key: "totalTiketTerjual",
       align: "right",
     },
 
     {
       title: "Total Pendapatan",
-      dataIndex: "pendapatan",
-      key: "pendapatan",
+      dataIndex: "totalPenjualan",
+      key: "totalPenjualan",
       align: "right",
+      fixed: "right",
+      render: (row) => `Rp ${formatter(row)}`,
     },
   ].map((clm) => ({
     ...clm,
@@ -57,21 +62,36 @@ const MainContentPenjualan = () => {
     width: getColumnWidth(clm?.dataIndex, dataSource, clm?.title),
   }));
 
+  const dispatch = useDispatch();
+
+  const getDatas = useCallback(() => {
+    dispatch(getReportingPenjualanAction()).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    getDatas();
+  }, []);
+
   const footerShow = () => {
     const total = dataSource.reduce(
-      (accumulator, currentValue) => accumulator + currentValue.pendapatan,
+      (accumulator, currentValue) => accumulator + currentValue.totalPenjualan,
       0
     );
     const qty = dataSource.reduce(
-      (accumulator, currentValue) => accumulator + currentValue.tiketTerjual,
+      (accumulator, currentValue) =>
+        accumulator + currentValue.totalTiketTerjual,
       0
     );
 
     return (
       <div className="grid grid-cols-6 w-full pr-[1em]">
-        <p className="font-semibold col-span-4">Total</p>
+        <p className="font-semibold col-span-4">
+          Grand Total Tiktet Terjual & Pendapatan
+        </p>
         <p className="font-semibold col-span-1 text-end">{qty}</p>
-        <p className="font-semibold col-span-1 text-end">Rp {total}</p>
+        <p className="font-semibold col-span-1 text-end">
+          Rp {formatter(total)}
+        </p>
       </div>
     );
   };
@@ -86,7 +106,7 @@ const MainContentPenjualan = () => {
           pageSizeOptions: [5, 10, 15, 20, 30, 50, 100],
           showSizeChanger: true,
         }}
-        scroll={{ y: "calc(52vh - 4em)", x: true }}
+        scroll={{ y: "calc(52vh - 4em)", x: "max-content" }}
         footer={dataSource.length > 0 && footerShow}
       />
     </section>

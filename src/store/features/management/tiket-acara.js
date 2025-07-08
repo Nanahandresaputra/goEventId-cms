@@ -4,26 +4,27 @@ import { endpoints } from "../../services/endpoint";
 import { httpMethod } from "../../services/method";
 
 const TYPE = {
-  GET_PENYELENGGARA: "get/penyelenggara",
-  POST_PENYELENGGARA: "post/penyelenggara",
-  PATCH_PENYELENGGARA: "patch/penyelenggara",
-  DELETE_PENYELENGGARA: "delete/penyelenggara",
+  GET_TIKET_ACARA: "get/tiket-acara",
+  POST_TIKET_ACARA: "post/tiket-acara",
+  PATCH_TIKET_ACARA: "patch/tiket-acara",
+  DELETE_TIKET_ACARA: "delete/tiket-acara",
 };
 
 const initialState = {
-  penyelenggaraList: [],
+  tiketAcaraList: [],
   isLoadingGet: false,
   isErrorGet: false,
 };
 
-export const getPenyelenggaraAction = createAsyncThunk(
-  TYPE.GET_PENYELENGGARA,
-  async () => {
+export const getTiketAcaraAction = createAsyncThunk(
+  TYPE.GET_TIKET_ACARA,
+  async ({ acara_id }) => {
     return await new Promise((resolve, reject) => {
       serviceApi({
         withToken: true,
-        endpoint: endpoints.penyelenggara,
+        endpoint: endpoints.tiketAcara,
         method: httpMethod.get,
+        optionalHeaders: { acara_id },
       })
         .then((res) => {
           resolve(res.data);
@@ -35,25 +36,25 @@ export const getPenyelenggaraAction = createAsyncThunk(
   }
 );
 
-const penyelenggaraSlice = createSlice({
-  name: "penyelenggara",
+const acaraSlice = createSlice({
+  name: "tiket-acara",
   initialState,
   reducers: {},
   extraReducers(builder) {
-    builder.addCase(getPenyelenggaraAction.pending, (state) => {
+    builder.addCase(getTiketAcaraAction.pending, (state) => {
       state.isLoadingGet = true;
       state.isError = false;
     });
-    builder.addCase(getPenyelenggaraAction.fulfilled, (state, action) => {
+    builder.addCase(getTiketAcaraAction.fulfilled, (state, action) => {
       state.isLoadingGet = false;
       state.isError = false;
-      state.penyelenggaraList = action.payload;
+      state.tiketAcaraList = action.payload;
     });
-    builder.addCase(getPenyelenggaraAction.rejected, (state) => {
+    builder.addCase(getTiketAcaraAction.rejected, (state) => {
       state.isLoadingGet = false;
       state.isError = true;
     });
   },
 });
 
-export default penyelenggaraSlice.reducer;
+export default acaraSlice.reducer;

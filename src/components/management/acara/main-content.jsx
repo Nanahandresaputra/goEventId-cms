@@ -1,47 +1,54 @@
 import { Button, Table, Tag } from "antd";
-import React from "react";
+import React, { useCallback, useContext, useEffect, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAcaraAction } from "../../../store/features/management/acara";
+import { getColumnWidth } from "../../../helpers/table-column-width";
+import { ContextAcara } from "../../../pages/management/acara";
+import { formatDate } from "../../../helpers/date-format";
+import StatusAcaraTag from "../../atoms/generate-tag/status-acara";
 
 const MainContentAcara = () => {
+  const { acaraList, isLoadingGet } = useSelector((state) => state.acara);
+
+  const { setSelectedAcara } = useContext(ContextAcara);
+
+  const dataSource = useMemo(() => {
+    if (acaraList?.length > 0) {
+      setSelectedAcara(acaraList[0]);
+    }
+    return acaraList;
+  }, [acaraList]);
+
   const columns = [
     {
       title: "Acara",
-      dataIndex: "acara",
-      key: "acara",
-      // render: (row) => <p className="font-semibold">{row?.toUpperCase()}</p>,
+      dataIndex: "nama_acara",
+      key: "nama_acara",
     },
     {
       title: "Penyelenggara",
       dataIndex: "penyelenggara",
       key: "penyelenggara",
-      // render: (row) => <p className="font-semibold">{row}</p>,
+      render: (row) => row?.nama,
     },
     {
       title: "Kategori",
       dataIndex: "kategori",
       key: "kategori",
-      // render: (row) => <p className="font-semibold">{row}</p>,
+      render: (row) => row?.nama_kategori,
     },
     {
       title: "Tanggal",
-      dataIndex: "tanggal",
-      key: "tanggal",
-      // render: (row) => <p className="font-semibold">{row}</p>,
+      dataIndex: "waktu_acara",
+      key: "waktu_acara",
+      render: (row) => formatDate({ time: row }),
     },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
       width: "15%",
-      render: (row) =>
-        row === 1 ? (
-          <Tag color="success" className="w-full text-center py-1">
-            Publish
-          </Tag>
-        ) : (
-          <Tag className="w-full text-center py-1" color="error">
-            Draft
-          </Tag>
-        ),
+      render: (row) => <StatusAcaraTag text={row} />,
     },
     {
       title: "",
@@ -56,15 +63,11 @@ const MainContentAcara = () => {
         );
       },
     },
-  ];
-
-  const dataSource = [...Array(28)].map((_, idx) => ({
-    key: idx,
-    acara: "Indonesia vs Bahrain FWC Qualifer 2026",
-    penyelenggara: "Nama Penyelenggara",
-    kategori: "Olahraga",
-    tanggal: "20 Jan 2025",
-    status: 1,
+  ].map((clm) => ({
+    ...clm,
+    title: <span style={{ whiteSpace: "nowrap" }}>{clm.title}</span>,
+    className: "whitespace-nowrap",
+    width: getColumnWidth(clm?.dataIndex, dataSource, clm?.title),
   }));
 
   // const handleSubmit = () => {
@@ -83,6 +86,16 @@ const MainContentAcara = () => {
   //   getCompaniesData();
   // }, []);
 
+  const dispatch = useDispatch();
+
+  const getDatas = useCallback(() => {
+    dispatch(getAcaraAction()).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    getDatas();
+  }, []);
+
   return (
     <section>
       {/* <Modal
@@ -95,6 +108,7 @@ const MainContentAcara = () => {
           <FormModalCompany />
         </Modal> */}
       <Table
+        loading={isLoadingGet}
         columns={columns}
         size="large"
         dataSource={dataSource}

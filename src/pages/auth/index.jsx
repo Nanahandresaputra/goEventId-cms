@@ -4,10 +4,10 @@ import InputText from "../../components/atoms/form/inputText";
 import { goeBg, logo } from "../../assets/images";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { loginAction } from "../../store/features/auth/login";
+import { loginAction } from "../../store/features/auth/auth";
 
 const Login = () => {
-  const { isLoading } = useSelector((state) => state.authLogin);
+  const { isLoading } = useSelector((state) => state.auth);
 
   const [formLogin] = Form.useForm();
 
@@ -66,6 +66,7 @@ const Login = () => {
             </p>
           </div>
           <Form
+            validateTrigger="onSubmit"
             form={formLogin}
             autoComplete="off"
             className="space-y-8"

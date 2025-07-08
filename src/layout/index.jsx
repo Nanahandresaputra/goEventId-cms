@@ -12,7 +12,7 @@ const DesktopApp = () => {
   function getStorageData() {
     try {
       return {
-        token: JSON.parse(localStorage?.token || "[]"),
+        token: localStorage?.token || "",
       };
     } catch (err) {
       console.error("Failed to parse cookies:", err);
@@ -23,9 +23,9 @@ const DesktopApp = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       const newStorage = getStorageData();
-      const sorageChanged =
+      const storageChanged =
         JSON.stringify(newStorage) !== JSON.stringify(storageData);
-      if (sorageChanged) {
+      if (storageChanged) {
         setStorageData(JSON.parse(JSON.stringify(newStorage))); // Trigger re-render
       }
     }, 300); // Check every second

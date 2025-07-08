@@ -1,18 +1,25 @@
 import axios from "axios";
-import { config } from "../../../config";
+import { config } from "../../config";
 
 const { baseUrl } = config;
 
-export const authLoginApi = async ({ body }) => {
+export const serviceApi = async ({
+  method,
+  body,
+  withToken = true,
+  endpoint,
+  optionalHeaders = {},
+}) => {
+  const token = await localStorage?.token;
   return await new Promise((resolve, reject) => {
     axios({
-      method: "POST",
-      url: `${baseUrl}/auth/login`,
-      data: body,
+      method,
+      url: `${baseUrl}/${endpoint}`,
+      ...(body && { data: body }),
+      ...(withToken && { headers: { ...optionalHeaders, token } }),
     })
       .then((res) => {
         if (res.status === 200 || res.status === 201) {
-          //   localStorage.setItem("token", res.data.token);
           if (res.data?.statusCode === 200) {
             resolve(res.data);
           } else {

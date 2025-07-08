@@ -1,7 +1,12 @@
 import { Button, Table, Tag } from "antd";
-import React from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getUsersAction } from "../../../store/features/management/users";
+import StatusActivationTag from "../../atoms/generate-tag/status-activation";
+import RolerUserTag from "../../atoms/generate-tag/role-user";
 
 const MainContentUsers = () => {
+  const { usersList } = useSelector((state) => state.users);
   const columns = [
     {
       title: "Nama",
@@ -19,28 +24,22 @@ const MainContentUsers = () => {
       title: "Role",
       dataIndex: "role",
       key: "role",
-      // render: (row) => <p className="font-semibold">{row}</p>,
+      width: "15%",
+      render: (row) => <RolerUserTag text={row} />,
     },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      render: (row) =>
-        row === 1 ? (
-          <Tag color="success" className="w-full text-center py-1">
-            Publish
-          </Tag>
-        ) : (
-          <Tag className="w-full text-center py-1" color="error">
-            Draft
-          </Tag>
-        ),
+      width: "10%",
+      render: (row) => <StatusActivationTag text={row} />,
     },
     {
       title: "",
       dataIndex: "action",
       key: "action",
-      width: "10%",
+      width: "12%",
+      align: "right",
       render: (_, record) => {
         return (
           <Button type="primary" onClick={() => console.log(record)}>
@@ -51,13 +50,21 @@ const MainContentUsers = () => {
     },
   ];
 
-  const dataSource = [...Array(28)].map((_, idx) => ({
-    key: idx,
-    nama: `Nama User ${idx + 1}`,
-    email: `penyelenggara${idx + 1}@mail.com`,
-    role: `Admin`,
-    status: 1,
-  }));
+  const dataSource = useMemo(() => {
+    return usersList;
+  }, [usersList]);
+
+  const dispatch = useDispatch();
+
+  console.log({ usersList });
+
+  const getDatas = useCallback(() => {
+    dispatch(getUsersAction()).catch(() => {}, []);
+  }, []);
+
+  useEffect(() => {
+    getDatas();
+  }, []);
 
   // const handleSubmit = () => {
 
