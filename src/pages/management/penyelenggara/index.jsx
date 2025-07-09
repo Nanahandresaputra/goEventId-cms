@@ -1,9 +1,9 @@
 import React, { createContext, useState } from "react";
 import LayoutCanvas from "../../../components/atoms/layout-canvas";
-import ExtraHeaderAcara from "../../../components/management/acara/extra-header";
 
 import MainContentPenyelenggara from "../../../components/management/penyelenggara/main-content";
 import DetailContentPenyelenggara from "../../../components/management/penyelenggara/detail-content";
+import ExtraHeader from "../../../components/atoms/other/extra-header";
 
 export const ContextPenyelenggara = createContext();
 
@@ -15,7 +15,7 @@ const ManagementPenyelenggara = () => {
     >
       <LayoutCanvas
         extraMainActionHeader={() => (
-          <ExtraHeaderAcara
+          <ExtraHeader
             placeholder="Cari Penyelenggara"
             onChangeSearch={() => {}}
             //   onClickBtnAdd={openModalCreate}

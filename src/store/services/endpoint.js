@@ -6,4 +6,5 @@ export const endpoints = {
   user: "user",
   penyelenggara: "penyelenggara",
   reportin: "reporting",
+  kategori: "kategori",
 };

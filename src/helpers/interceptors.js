@@ -19,8 +19,8 @@ export const interceptorsUtils = () => {
       if (error?.response?.data) {
         toast.error(error?.response?.data?.message);
         if (
-          error?.response?.statusCode === 401 &&
-          error?.response?.message === "Unauthorized"
+          error?.response?.data?.statusCode === 401 &&
+          error?.response?.data?.message === "Unauthorized"
         ) {
           localStorage.clear();
           window.location.href = "/login";

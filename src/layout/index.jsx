@@ -8,6 +8,7 @@ export const ContextApp = createContext();
 
 const DesktopApp = () => {
   const [storageData, setStorageData] = useState(() => getStorageData());
+  const [wildSearch, setWildSearch] = useState("");
 
   function getStorageData() {
     try {
@@ -34,7 +35,7 @@ const DesktopApp = () => {
   }, [storageData]);
 
   return (
-    <ContextApp.Provider value={{ storageData }}>
+    <ContextApp.Provider value={{ storageData, wildSearch, setWildSearch }}>
       <Layout className="h-screen w-screen overflow-hidden bg-[#063127]">
         <Asider />
         <Layout>

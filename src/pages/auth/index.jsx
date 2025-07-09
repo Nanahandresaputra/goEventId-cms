@@ -23,7 +23,6 @@ const Login = () => {
       .then((body) => {
         dispatch(loginAction({ body }))
           .then((res) => {
-            console.log({ res });
             if (res?.meta?.requestStatus === "fulfilled") {
               navigate("/desktop/manajemen-acara");
             }
@@ -50,7 +49,7 @@ const Login = () => {
       <div className="w-full h-full absolute bg-auth-desk" />
       <div className="col-span-1  flex justify-end items-center  h-screen relative">
         <div className="absolute top-10 left-10 flex space-x-3 items-center">
-          <img src={logo} alt="vend-logo" className="h-16 " />
+          <img src={logo} alt="vend-logo" className="h-16 object-cover  " />
           <div>
             <p className="text-gray-200 font-semibold text-xl">GoEventID</p>
             <p className="text-gray-200 font-semibold text-base">
@@ -102,7 +101,7 @@ const Login = () => {
       <div className="col-span-1 h-screen">
         <img
           src={goeBg}
-          className="h-screen object-cover w-full"
+          className="h-screen soze object-cover object-bottom-left w-full"
           alt="vend-machine"
         />
       </div>

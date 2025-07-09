@@ -6,18 +6,37 @@ import { getColumnWidth } from "../../../helpers/table-column-width";
 import { ContextAcara } from "../../../pages/management/acara";
 import { formatDate } from "../../../helpers/date-format";
 import StatusAcaraTag from "../../atoms/generate-tag/status-acara";
+import { ContextApp } from "../../../layout";
 
 const MainContentAcara = () => {
   const { acaraList, isLoadingGet } = useSelector((state) => state.acara);
 
-  const { setSelectedAcara } = useContext(ContextAcara);
+  const { setSelectedAcara, filterCategory, filterStatus } =
+    useContext(ContextAcara);
+
+  const { wildSearch } = useContext(ContextApp);
 
   const dataSource = useMemo(() => {
-    if (acaraList?.length > 0) {
-      setSelectedAcara(acaraList[0]);
+    const filterData = acaraList
+      .filter((data) =>
+        filterCategory === -1 ? data : data.kategori.id === filterCategory
+      )
+      .filter((data) =>
+        filterStatus === -1 ? data : data.status === filterStatus
+      )
+      .filter((data) =>
+        wildSearch === ""
+          ? data
+          : data.nama_acara.toLowerCase().includes(wildSearch.toLowerCase())
+      );
+
+    if (filterData?.length > 0) {
+      setSelectedAcara(filterData[0]);
+    } else {
+      setSelectedAcara({});
     }
-    return acaraList;
-  }, [acaraList]);
+    return filterData;
+  }, [acaraList, filterCategory, wildSearch, setSelectedAcara, filterStatus]);
 
   const columns = [
     {

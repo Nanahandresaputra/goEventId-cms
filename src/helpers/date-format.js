@@ -7,6 +7,5 @@ export const formatDate = ({
   time = `${Date.now()}`,
   formatDate = "DD MMMM YYYY HH:mm",
 }) => {
-  console.log({ time });
   return dayjs(time).format(formatDate);
 };

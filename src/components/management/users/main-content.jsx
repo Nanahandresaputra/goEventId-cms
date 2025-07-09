@@ -56,8 +56,6 @@ const MainContentUsers = () => {
 
   const dispatch = useDispatch();
 
-  console.log({ usersList });
-
   const getDatas = useCallback(() => {
     dispatch(getUsersAction()).catch(() => {}, []);
   }, []);

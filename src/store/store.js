@@ -5,6 +5,7 @@ import tiketAcaraReducer from "./features/management/tiket-acara.js";
 import penyelenggaraReducer from "./features/management/penyelenggara.js";
 import usersReducer from "./features/management/users.js";
 import penjualanReducer from "./features/reporting/penjualan.js";
+import kategoriReducer from "./features/management/kategori.js";
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   penyelenggara: penyelenggaraReducer,
   users: usersReducer,
   penjualan: penjualanReducer,
+  kategori: kategoriReducer,
 });
 
 export const store = configureStore({

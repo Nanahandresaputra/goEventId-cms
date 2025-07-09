@@ -1,14 +1,14 @@
 import React from "react";
 import LayoutCanvas from "../../../components/atoms/layout-canvas";
-import ExtraHeaderAcara from "../../../components/management/acara/extra-header";
 
 import MainContentUsers from "../../../components/management/users/main-content";
+import ExtraHeader from "../../../components/atoms/other/extra-header";
 
 const ManagementUsers = () => {
   return (
     <LayoutCanvas
       extraMainActionHeader={() => (
-        <ExtraHeaderAcara
+        <ExtraHeader
           onChangeSearch={() => {}}
           //   onClickBtnAdd={openModalCreate}
           //   onResultXls={handleXlsx}

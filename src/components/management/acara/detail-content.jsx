@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import KeyLabelText from "../../atoms/other/key-label-text";
-import { Button, Collapse, Image } from "antd";
+import { Button, Collapse, Empty, Image } from "antd";
 import DetailTicket from "./detail-ticket";
 import { ContextAcara } from "../../../pages/management/acara";
 import { formatDate } from "../../../helpers/date-format";
@@ -88,14 +88,23 @@ const DetailContentAcara = () => {
     },
   ];
   return (
-    <section>
-      <Collapse
-        defaultActiveKey={["1", "2"]}
-        // expandIconPosition="end"
-        // ghost
-        bordered={false}
-        items={items}
-      />
+    <section className="h-full w-full">
+      {selectedAcara?.nama_acara ? (
+        <Collapse
+          defaultActiveKey={["1", "2"]}
+          // expandIconPosition="end"
+          // ghost
+          bordered={false}
+          items={items}
+        />
+      ) : (
+        <div>
+          <h1 className="text-[#14182999] font-semibold text-xl">
+            Detail Acara
+          </h1>
+          <Empty />
+        </div>
+      )}
     </section>
   );
 };
