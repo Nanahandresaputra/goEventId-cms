@@ -13,8 +13,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { getKategoriAction } from "../../../store/features/management/kategori";
 import ExtraHeader from "../../../components/atoms/other/extra-header";
 import { Form } from "antd";
+import { getPenyelenggaraAction } from "../../../store/features/management/penyelenggara";
+import {
+  getKabupateKotaAction,
+  getProvinsiAction,
+} from "../../../store/features/management/regional";
 
-export const ContextAcara = createContext();
+export const ContextAcara = createContext({});
 
 const ManagementAcara = () => {
   const [formAcara] = Form.useForm();
@@ -25,7 +30,7 @@ const ManagementAcara = () => {
     setModalAcara(true);
   };
 
-  const closeFormAcara = () => {
+  const closeModalAcara = () => {
     setModalAcara(false);
     formAcara.resetFields();
   };
@@ -36,6 +41,10 @@ const ManagementAcara = () => {
   const [filterStatus, setFilterStatus] = useState(-1);
 
   const { kategoriList } = useSelector((state) => state.kategori);
+  const { penyelenggaraList } = useSelector((state) => state.penyelenggara);
+  const { provinsiList, kabupatenkotaList } = useSelector(
+    (state) => state.regional
+  );
 
   const kategoriOptions = useMemo(() => {
     return kategoriList?.map((data) => ({
@@ -44,14 +53,63 @@ const ManagementAcara = () => {
     }));
   }, [kategoriList]);
 
+  const penyelenggaraOptions = useMemo(() => {
+    return penyelenggaraList?.map((data) => ({
+      label: data?.nama,
+      value: data?.id,
+    }));
+  }, [penyelenggaraList]);
+
+  const provinsiOptions = useMemo(() => {
+    return provinsiList?.map((data) => ({
+      label: data?.nama,
+      value: data?.id,
+    }));
+  }, [provinsiList]);
+
+  const kabupatenkotaOptions = useMemo(() => {
+    return kabupatenkotaList?.map((data) => ({
+      label: data?.nama,
+      value: data?.id,
+    }));
+  }, [kabupatenkotaList]);
+
+  const defaultValueAcara = {
+    operation: "c",
+    nama_acara: null,
+    waktu_acara: null,
+    kategori_id: null,
+    user_id_penyelenggara: null,
+    deskripsi: null,
+    provinsi_id: null,
+    kabupaten_kota_id: null,
+    alamat: null,
+    banner_img: null,
+    map_tiket_img: null,
+  };
+
   const dispatch = useDispatch();
 
   const getDatasKategori = useCallback(() => {
     dispatch(getKategoriAction()).catch(() => {});
   }, []);
 
+  const getDatasPenyelenggara = useCallback(() => {
+    dispatch(getPenyelenggaraAction()).catch(() => {});
+  }, []);
+
+  const getDatasProvinsi = useCallback(() => {
+    dispatch(getProvinsiAction()).catch(() => {});
+  }, []);
+
+  const getDatasKabupatenKota = useCallback(({ provinsiId }) => {
+    dispatch(getKabupateKotaAction({ provinsiId })).catch(() => {});
+  }, []);
+
   useEffect(() => {
+    getDatasProvinsi();
     getDatasKategori();
+    getDatasPenyelenggara();
   }, []);
 
   return (
@@ -64,10 +122,16 @@ const ManagementAcara = () => {
         filterStatus,
         setFilterStatus,
         kategoriOptions,
+        penyelenggaraOptions,
         modalAcara,
         setModalAcara,
         openModalAcara,
-        closeFormAcara,
+        closeModalAcara,
+        formAcara,
+        defaultValueAcara,
+        getDatasKabupatenKota,
+        provinsiOptions,
+        kabupatenkotaOptions,
       }}
     >
       <LayoutCanvas
@@ -75,6 +139,7 @@ const ManagementAcara = () => {
           <ExtraHeader
             placeholder="Cari berdasarkan acara"
             //   onClickBtnAdd={openModalCreate}
+            onClickBtn={openModalAcara}
           />
         )}
         childMain={() => (

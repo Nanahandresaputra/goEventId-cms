@@ -7,6 +7,7 @@ import { ContextAcara } from "../../../pages/management/acara";
 import { formatDate } from "../../../helpers/date-format";
 import StatusAcaraTag from "../../atoms/generate-tag/status-acara";
 import { ContextApp } from "../../../layout";
+import FormAcara from "./form-acara";
 
 const MainContentAcara = () => {
   const { acaraList, isLoadingGet } = useSelector((state) => state.acara);
@@ -117,15 +118,7 @@ const MainContentAcara = () => {
 
   return (
     <section>
-      {/* <Modal
-          title={"Tambah Perusahaan"}
-          open={isOpenForm}
-          onCancel={closeModal}
-          onOk={handleSubmit}
-          confirmLoading={isLoading}
-        >
-          <FormModalCompany />
-        </Modal> */}
+      <FormAcara />
       <Table
         loading={isLoadingGet}
         columns={columns}

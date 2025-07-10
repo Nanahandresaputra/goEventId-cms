@@ -1,6 +1,5 @@
 import { Form, DatePicker } from "antd";
-const { RangePicker } = DatePicker;
-import "./index.css";
+// import "./index.css";
 
 /**
   Props
@@ -11,7 +10,7 @@ import "./index.css";
  **   onChange => function
  **   ...rest
  */
-export default function RangeDateComp({
+export default function SelectDateComp({
   placeholder,
   disabled,
   onChange = () => {},
@@ -24,6 +23,7 @@ export default function RangeDateComp({
   className,
   dark,
   gray,
+  showTime,
 }) {
   //   const { placeholder, disabled, inputReadOnly, variant, onChange, ...rest } =
   //     props;
@@ -59,14 +59,15 @@ export default function RangeDateComp({
           message: placeholder ? `${placeholder}` : `Masukan ${name}`,
         },
       ]}
-      className={`${className} picker-date`}
+      className={`${className}`}
     >
-      <RangePicker
+      <DatePicker
         size={size}
-        placeholder={placeholder || ["Start Date", "End Date"]}
+        placeholder={placeholder || "Select Date"}
         placement="bottomLeft"
         inputReadOnly={inputReadOnly}
         open={inputReadOnly ? false : undefined}
+        showTime={showTime}
         // disabledDate={disabledDate}
         disabled={disabled}
         className={`w-full ${

@@ -43,7 +43,7 @@ export default function RangeTimeComp({
   return (
     <Form.Item
       name={name}
-      className={className}
+      className={`${className} picker-date`}
       rules={[
         ...rules,
         required && {

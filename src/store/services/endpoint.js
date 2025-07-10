@@ -7,4 +7,6 @@ export const endpoints = {
   penyelenggara: "penyelenggara",
   reportin: "reporting",
   kategori: "kategori",
+  provinsi: "provinsi",
+  kabupatenkota: "kabupatenkota",
 };
