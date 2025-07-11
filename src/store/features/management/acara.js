@@ -14,6 +14,9 @@ const initialState = {
   acaraList: [],
   isLoadingGet: false,
   isErrorGet: false,
+
+  isLoadingOn: false,
+  isErrorOn: false,
 };
 
 export const getAcaraAction = createAsyncThunk(TYPE.GET_ACARA, async () => {
@@ -32,6 +35,27 @@ export const getAcaraAction = createAsyncThunk(TYPE.GET_ACARA, async () => {
   });
 });
 
+export const createAcaraAction = createAsyncThunk(
+  TYPE.POST_ACARA,
+  async ({ body }, { dispatch }) => {
+    return await new Promise((resolve, reject) => {
+      serviceApi({
+        withToken: true,
+        endpoint: endpoints.acara,
+        method: httpMethod.post,
+        body,
+      })
+        .then((res) => {
+          dispatch(getAcaraAction()).catch(() => {});
+          resolve(res.data);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
+);
+
 const acaraSlice = createSlice({
   name: "acara",
   initialState,
@@ -39,16 +63,29 @@ const acaraSlice = createSlice({
   extraReducers(builder) {
     builder.addCase(getAcaraAction.pending, (state) => {
       state.isLoadingGet = true;
-      state.isError = false;
+      state.isErrorGet = false;
     });
     builder.addCase(getAcaraAction.fulfilled, (state, action) => {
       state.isLoadingGet = false;
-      state.isError = false;
+      state.isErrorGet = false;
       state.acaraList = action.payload;
     });
     builder.addCase(getAcaraAction.rejected, (state) => {
       state.isLoadingGet = false;
-      state.isError = true;
+      state.isErrorGet = true;
+    });
+
+    builder.addCase(createAcaraAction.pending, (state) => {
+      state.isLoadingOn = true;
+      state.isErrorOn = false;
+    });
+    builder.addCase(createAcaraAction.fulfilled, (state) => {
+      state.isLoadingOn = false;
+      state.isErrorOn = false;
+    });
+    builder.addCase(createAcaraAction.rejected, (state) => {
+      state.isLoadingOn = false;
+      state.isErrorOn = true;
     });
   },
 });

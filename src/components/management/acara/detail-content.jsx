@@ -4,9 +4,11 @@ import { Button, Collapse, Empty, Image } from "antd";
 import DetailTicket from "./detail-ticket";
 import { ContextAcara } from "../../../pages/management/acara";
 import { formatDate } from "../../../helpers/date-format";
+import FormTicket from "./form-ticket";
+import { statusAcara } from "../../../helpers/status-data";
 
 const DetailContentAcara = () => {
-  const { selectedAcara } = useContext(ContextAcara);
+  const { selectedAcara, openModalTicket } = useContext(ContextAcara);
 
   const items = [
     {
@@ -47,11 +49,16 @@ const DetailContentAcara = () => {
       extra: (
         <Button
           type="primary"
+          disabled={selectedAcara?.status !== statusAcara.draft.value}
           onClick={(event) => {
             event.stopPropagation();
           }}
         >
-          Publish
+          {selectedAcara?.status === statusAcara.publish.value
+            ? "Published"
+            : selectedAcara?.status === statusAcara.expired.value
+            ? statusAcara.expired.label
+            : statusAcara.publish.label}
         </Button>
       ),
     },
@@ -75,11 +82,12 @@ const DetailContentAcara = () => {
           <DetailTicket />
         </div>
       ),
-      extra: (
+      extra: selectedAcara?.status === statusAcara.draft.value && (
         <Button
           type="primary"
           onClick={(event) => {
             event.stopPropagation();
+            openModalTicket();
           }}
         >
           Tambah Tiket
@@ -89,6 +97,7 @@ const DetailContentAcara = () => {
   ];
   return (
     <section className="h-full w-full">
+      <FormTicket />
       {selectedAcara?.nama_acara ? (
         <Collapse
           defaultActiveKey={["1", "2"]}

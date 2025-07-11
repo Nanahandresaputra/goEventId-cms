@@ -41,8 +41,6 @@ const MainContentPenyelenggara = () => {
     },
   ];
 
-  console.log({ penyelenggaraList });
-
   const getDatas = useCallback(() => {
     dispatch(getPenyelenggaraAction()).catch(() => {});
   }, []);

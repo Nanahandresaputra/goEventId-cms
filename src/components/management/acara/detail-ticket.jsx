@@ -4,6 +4,7 @@ import { ContextAcara } from "../../../pages/management/acara";
 import { useDispatch, useSelector } from "react-redux";
 import { getTiketAcaraAction } from "../../../store/features/management/tiket-acara";
 import { formatter } from "../../../helpers/formatter";
+import { statusAcara } from "../../../helpers/status-data";
 
 const DetailTicket = () => {
   const { selectedAcara } = useContext(ContextAcara);
@@ -40,9 +41,11 @@ const DetailTicket = () => {
       width: "10%",
       render: (_, record) => {
         return (
-          <Button type="primary" onClick={() => console.log(record)}>
-            Edit
-          </Button>
+          selectedAcara?.status !== statusAcara.publish.value && (
+            <Button type="primary" onClick={() => console.log(record)}>
+              Edit
+            </Button>
+          )
         );
       },
     },

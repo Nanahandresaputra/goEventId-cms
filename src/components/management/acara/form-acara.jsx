@@ -4,16 +4,17 @@ import { ContextAcara } from "../../../pages/management/acara";
 import InputText from "../../atoms/form/inputText";
 import SelectComp from "../../atoms/form/selectComp";
 import SelectDateComp from "../../atoms/form/date-picker";
-import Editor from "react-simple-wysiwyg";
+
 import {
   beforeUpload,
   getBase64,
   handleImageUpload,
 } from "../../../helpers/upload-img";
-import { BiCameraHome } from "react-icons/bi";
-import Dragger from "antd/es/upload/Dragger";
 import PlaceholderImgUpload from "../../atoms/other/placeholder-img-upload";
 import { formatDate } from "../../../helpers/date-format";
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
+import { useDispatch, useSelector } from "react-redux";
 
 const FormAcara = () => {
   const {
@@ -26,14 +27,21 @@ const FormAcara = () => {
     getDatasKabupatenKota,
     provinsiOptions,
     kabupatenkotaOptions,
+    createDataAcara,
   } = useContext(ContextAcara);
+
+  const { isLoadingOn } = useSelector((state) => state.acara);
+
+  const dispatch = useDispatch();
+
   const [bannerData, setBannerData] = useState(null);
   const [mapTiketData, setMapTiketData] = useState(null);
+
+  const [html, setHtml] = useState("");
 
   const handleChangeBanner = (info) => {
     handleImageUpload({ file: info?.fileList?.[0]?.originFileObj })
       .then((res) => {
-        console.log("trigger base64");
         getBase64({
           file: res,
           callback: (result) => {
@@ -62,7 +70,7 @@ const FormAcara = () => {
     formAcara
       .validateFields()
       .then((res) => {
-        console.log("res -->", {
+        const body = {
           ...defaultValueAcara,
           ...res,
           // 2025-04-20 20:30:00.000
@@ -72,7 +80,11 @@ const FormAcara = () => {
           }),
           banner_img: bannerData,
           map_tiket_img: mapTiketData,
-        });
+        };
+
+        delete body.operation;
+
+        dispatch(createDataAcara(body)).catch(() => {});
       })
       .catch(() => {});
   };
@@ -91,14 +103,14 @@ const FormAcara = () => {
       open={modalAcara}
       onOk={handleSubmitForm}
       onCancel={closeModalAcara}
-      confirmLoading={false} //temp
+      confirmLoading={isLoadingOn} //temp
       className="max-h-[85vh] overflow-y-auto"
     >
       <Form
         layout="vertical"
         form={formAcara}
-        autoComplete="off"
         className="grid grid-cols-2 gap-x-5"
+        autoComplete="off"
         validateTrigger="onSubmit"
       >
         <Form.Item
@@ -192,8 +204,11 @@ const FormAcara = () => {
           label="Deskripsi"
           className={"col-span-2"}
         >
-          <Editor
-          //  value={html} onChange={onChange}
+          <ReactQuill
+            theme="snow"
+            // value={html}
+            defaultValue={html}
+            onChange={setHtml}
           />
         </Form.Item>
         <Form.Item className={"col-span-2"}>

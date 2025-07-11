@@ -8,6 +8,7 @@ import { formatDate } from "../../../helpers/date-format";
 import StatusAcaraTag from "../../atoms/generate-tag/status-acara";
 import { ContextApp } from "../../../layout";
 import FormAcara from "./form-acara";
+import { statusAcara } from "../../../helpers/status-data";
 
 const MainContentAcara = () => {
   const { acaraList, isLoadingGet } = useSelector((state) => state.acara);
@@ -77,9 +78,11 @@ const MainContentAcara = () => {
       width: "10%",
       render: (_, record) => {
         return (
-          <Button type="primary" onClick={() => console.log(record)}>
-            Edit
-          </Button>
+          record?.status === statusAcara.draft && (
+            <Button type="primary" onClick={() => console.log(record)}>
+              Edit
+            </Button>
+          )
         );
       },
     },

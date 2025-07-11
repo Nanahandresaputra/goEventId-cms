@@ -18,13 +18,16 @@ import {
   getKabupateKotaAction,
   getProvinsiAction,
 } from "../../../store/features/management/regional";
+import { createAcaraAction } from "../../../store/features/management/acara";
 
 export const ContextAcara = createContext({});
 
 const ManagementAcara = () => {
   const [formAcara] = Form.useForm();
+  const [formTicket] = Form.useForm();
 
   const [modalAcara, setModalAcara] = useState(false);
+  const [modalTicket, setModalTicket] = useState(false);
 
   const openModalAcara = () => {
     setModalAcara(true);
@@ -33,6 +36,15 @@ const ManagementAcara = () => {
   const closeModalAcara = () => {
     setModalAcara(false);
     formAcara.resetFields();
+  };
+
+  const openModalTicket = () => {
+    setModalTicket(true);
+  };
+
+  const closeModalTicket = () => {
+    setModalTicket(false);
+    formTicket.resetFields();
   };
 
   const [selectedAcara, setSelectedAcara] = useState({});
@@ -106,6 +118,14 @@ const ManagementAcara = () => {
     dispatch(getKabupateKotaAction({ provinsiId })).catch(() => {});
   }, []);
 
+  const createDataAcara = useCallback((body) => {
+    dispatch(createAcaraAction({ body }))
+      .then(() => {
+        setModalAcara(false);
+      })
+      .catch(() => {});
+  }, []);
+
   useEffect(() => {
     getDatasProvinsi();
     getDatasKategori();
@@ -132,6 +152,12 @@ const ManagementAcara = () => {
         getDatasKabupatenKota,
         provinsiOptions,
         kabupatenkotaOptions,
+        modalTicket,
+        setModalTicket,
+        openModalTicket,
+        closeModalTicket,
+        formTicket,
+        createDataAcara,
       }}
     >
       <LayoutCanvas
