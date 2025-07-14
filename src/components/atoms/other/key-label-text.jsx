@@ -7,9 +7,10 @@ const KeyLabelText = ({ keyVal = "test", value = "testval" }) => {
         <p>{keyVal}</p>
         <span>:</span>
       </div>
-      <div className="col-span-6 pl-4">
-        <p className="text-base text-justify">{value}</p>
-      </div>
+      <div
+        className="col-span-6 pl-4 text-base text-justify"
+        dangerouslySetInnerHTML={{ __html: value }}
+      />
     </div>
   );
 };

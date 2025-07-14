@@ -18,7 +18,11 @@ import {
   getKabupateKotaAction,
   getProvinsiAction,
 } from "../../../store/features/management/regional";
-import { createAcaraAction } from "../../../store/features/management/acara";
+import {
+  createAcaraAction,
+  updateAcaraAction,
+} from "../../../store/features/management/acara";
+import { notifSuccess } from "../../../helpers/notif";
 
 export const ContextAcara = createContext({});
 
@@ -121,6 +125,18 @@ const ManagementAcara = () => {
   const createDataAcara = useCallback((body) => {
     dispatch(createAcaraAction({ body }))
       .then(() => {
+        formAcara.resetFields();
+        notifSuccess({ method: "create" });
+        setModalAcara(false);
+      })
+      .catch(() => {});
+  }, []);
+
+  const updateDataAcara = useCallback((body, acaraId) => {
+    dispatch(updateAcaraAction({ body, acaraId }))
+      .then(() => {
+        formAcara.resetFields();
+        notifSuccess({ method: "edit" });
         setModalAcara(false);
       })
       .catch(() => {});
@@ -158,6 +174,7 @@ const ManagementAcara = () => {
         closeModalTicket,
         formTicket,
         createDataAcara,
+        updateDataAcara,
       }}
     >
       <LayoutCanvas

@@ -51,6 +51,10 @@ const DetailTicket = () => {
     },
   ];
 
+  // console.log({ selectedAcara });
+
+  console.log("acara_id --->", selectedAcara?.id);
+
   const getDataTickets = useCallback(() => {
     dispatch(getTiketAcaraAction({ acara_id: selectedAcara?.id })).catch(
       () => {}

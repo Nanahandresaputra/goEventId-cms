@@ -9,14 +9,23 @@ import StatusAcaraTag from "../../atoms/generate-tag/status-acara";
 import { ContextApp } from "../../../layout";
 import FormAcara from "./form-acara";
 import { statusAcara } from "../../../helpers/status-data";
+import { BiEdit } from "react-icons/bi";
+import dayjs from "dayjs";
+import "dayjs/locale/id";
 
 const MainContentAcara = () => {
   const { acaraList, isLoadingGet } = useSelector((state) => state.acara);
 
-  const { setSelectedAcara, filterCategory, filterStatus } =
-    useContext(ContextAcara);
+  const {
+    setSelectedAcara,
+    filterCategory,
+    filterStatus,
+    formAcara,
+    openModalAcara,
+    getDatasKabupatenKota,
+  } = useContext(ContextAcara);
 
-  const { wildSearch } = useContext(ContextApp);
+  const { wildSearch, dataIndex, setDataIndex } = useContext(ContextApp);
 
   const dataSource = useMemo(() => {
     const filterData = acaraList
@@ -32,13 +41,8 @@ const MainContentAcara = () => {
           : data.nama_acara.toLowerCase().includes(wildSearch.toLowerCase())
       );
 
-    if (filterData?.length > 0) {
-      setSelectedAcara(filterData[0]);
-    } else {
-      setSelectedAcara({});
-    }
     return filterData;
-  }, [acaraList, filterCategory, wildSearch, setSelectedAcara, filterStatus]);
+  }, [acaraList, filterCategory, wildSearch, filterStatus]);
 
   const columns = [
     {
@@ -78,10 +82,30 @@ const MainContentAcara = () => {
       width: "10%",
       render: (_, record) => {
         return (
-          record?.status === statusAcara.draft && (
-            <Button type="primary" onClick={() => console.log(record)}>
-              Edit
-            </Button>
+          record?.status === statusAcara.draft.value && (
+            <Button
+              type="primary"
+              className="flex justify-center items-center"
+              onClick={() => {
+                getDatasKabupatenKota({ provinsiId: record.provinsi.id });
+                formAcara.setFieldsValue({
+                  ...record,
+                  operation: "u",
+                  waktu_acara: dayjs(record.waktu_acara),
+                  kategori_id: record.kategori.id,
+                  kabupaten_kota_id: record.kabupatenkota.id,
+                  provinsi_id: record.provinsi.id,
+                  user_id_penyelenggara: record.penyelenggara.id,
+                });
+                openModalAcara();
+                console.log({
+                  ...record,
+                  operation: "u",
+                  waktu_acara: dayjs(record.waktu_acara),
+                });
+              }}
+              icon={<BiEdit className="text-2xl" />}
+            />
           )
         );
       },
@@ -116,6 +140,14 @@ const MainContentAcara = () => {
   }, []);
 
   useEffect(() => {
+    if (dataSource?.length > 0) {
+      setSelectedAcara(dataSource[dataIndex]);
+    } else {
+      setSelectedAcara({});
+    }
+  }, [dataSource, dataIndex]);
+
+  useEffect(() => {
     getDatas();
   }, []);
 
@@ -131,12 +163,20 @@ const MainContentAcara = () => {
           pageSizeOptions: [5, 10, 15, 20, 30, 50, 100],
           showSizeChanger: true,
         }}
-        // pagination={false}
+        onRow={(record) => {
+          return {
+            onClick: () => {
+              setDataIndex(
+                dataSource?.findIndex((data) => data?.id === record?.id)
+              );
+              setSelectedAcara(record);
+            }, // click row
+          };
+        }}
         // onrecord={(record) => ({
         //   onClick: () => {},
         //   onMouseEnter: (e) => e.stopPropagation(),
         // })}
-
         scroll={{ y: "calc(57vh - 4em)", x: true }}
       />
     </section>

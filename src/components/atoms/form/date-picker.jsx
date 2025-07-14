@@ -68,6 +68,7 @@ export default function SelectDateComp({
         inputReadOnly={inputReadOnly}
         open={inputReadOnly ? false : undefined}
         showTime={showTime}
+        format={"DD MMMM YYYY HH:mm:ss"}
         // disabledDate={disabledDate}
         disabled={disabled}
         className={`w-full ${

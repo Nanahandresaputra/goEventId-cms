@@ -8,7 +8,7 @@ const StatusAcaraTag = ({ text }) => {
         text === statusAcara.publish.value
           ? "bg-cyan-100 border border-cyan-700"
           : text === statusAcara.draft.value
-          ? "bg-orange-100 border border-orange-700"
+          ? "bg-orange-100 border border-orange-500"
           : "bg-red-100 border border-red-700"
       }`}
     >
@@ -17,7 +17,7 @@ const StatusAcaraTag = ({ text }) => {
           text === statusAcara.publish.value
             ? "text-cyan-700"
             : statusAcara.draft.value
-            ? "text-orange-700"
+            ? "text-orange-500"
             : "text-red-700"
         }`}
       >

@@ -4,7 +4,6 @@ import { ContextAcara } from "../../../pages/management/acara";
 import InputText from "../../atoms/form/inputText";
 import SelectComp from "../../atoms/form/selectComp";
 import SelectDateComp from "../../atoms/form/date-picker";
-
 import {
   beforeUpload,
   getBase64,
@@ -14,7 +13,9 @@ import PlaceholderImgUpload from "../../atoms/other/placeholder-img-upload";
 import { formatDate } from "../../../helpers/date-format";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { CgCamera } from "react-icons/cg";
+import { BsCameraFill } from "react-icons/bs";
 
 const FormAcara = () => {
   const {
@@ -28,16 +29,18 @@ const FormAcara = () => {
     provinsiOptions,
     kabupatenkotaOptions,
     createDataAcara,
+    selectedAcara,
+    updateDataAcara,
   } = useContext(ContextAcara);
 
   const { isLoadingOn } = useSelector((state) => state.acara);
-
-  const dispatch = useDispatch();
 
   const [bannerData, setBannerData] = useState(null);
   const [mapTiketData, setMapTiketData] = useState(null);
 
   const [html, setHtml] = useState("");
+
+  const initialVal = formAcara.getFieldsValue();
 
   const handleChangeBanner = (info) => {
     handleImageUpload({ file: info?.fileList?.[0]?.originFileObj })
@@ -70,7 +73,7 @@ const FormAcara = () => {
     formAcara
       .validateFields()
       .then((res) => {
-        const body = {
+        let body = {
           ...defaultValueAcara,
           ...res,
           // 2025-04-20 20:30:00.000
@@ -78,16 +81,32 @@ const FormAcara = () => {
             time: res.waktu_acara,
             formatDate: "YYYY-MM-DD HH:mm:ss.sss",
           }),
-          banner_img: bannerData,
-          map_tiket_img: mapTiketData,
+          banner_img: bannerData.replace(/^data:image\/[a-z]+;base64,/, ""),
+          map_tiket_img: mapTiketData.replace(
+            /^data:image\/[a-z]+;base64,/,
+            ""
+          ),
         };
 
         delete body.operation;
 
-        dispatch(createDataAcara(body)).catch(() => {});
+        console.log("body send -->", body);
+
+        if (initialVal?.operation === "u") {
+          updateDataAcara(body, selectedAcara?.id);
+        } else {
+          createDataAcara(body);
+        }
       })
       .catch(() => {});
   };
+
+  useEffect(() => {
+    if (initialVal?.operation === "u") {
+      setBannerData(`data:image/png;base64,${selectedAcara?.banner_img}`);
+      setMapTiketData(`data:image/png;base64,${selectedAcara?.map_tiket_img}`);
+    }
+  }, [initialVal]);
 
   useEffect(() => {
     if (kabupatenkotaOptions?.length > 0) {
@@ -99,10 +118,14 @@ const FormAcara = () => {
   return (
     <Modal
       width={"35%"}
-      title="Form TEmp title"
+      title={initialVal?.operation === "u" ? "Edit Acara" : "Tambah Acara"}
       open={modalAcara}
       onOk={handleSubmitForm}
-      onCancel={closeModalAcara}
+      onCancel={() => {
+        setBannerData(null);
+        setMapTiketData(null);
+        closeModalAcara();
+      }}
       confirmLoading={isLoadingOn} //temp
       className="max-h-[85vh] overflow-y-auto"
     >
@@ -113,6 +136,7 @@ const FormAcara = () => {
         autoComplete="off"
         validateTrigger="onSubmit"
       >
+        <Form.Item className="col-span-2 opacity-0" name={"operation"} />
         <Form.Item
           className={"col-span-2"}
           rules={[
@@ -136,11 +160,16 @@ const FormAcara = () => {
             {bannerData === null ? (
               <PlaceholderImgUpload text="Upload Banner Acara" />
             ) : (
-              <img
-                alt="banner"
-                className="w-full h-full object-fill rounded-lg"
-                src={bannerData}
-              />
+              <div className=" relative w-full h-full ">
+                <div className=" absolute rounded-full p-3 bg-white/30 bottom-0 right-0">
+                  <BsCameraFill className="text-3xl text-white	 " />
+                </div>
+                <img
+                  alt="banner"
+                  className="w-full h-full object-fill rounded-lg"
+                  src={bannerData}
+                />
+              </div>
             )}
           </Upload>
         </Form.Item>
@@ -226,11 +255,16 @@ const FormAcara = () => {
             {mapTiketData === null ? (
               <PlaceholderImgUpload text="Upload Map Tiket" />
             ) : (
-              <img
-                alt="banner"
-                className="w-full h-full object-fill rounded-lg"
-                src={mapTiketData}
-              />
+              <div className="relative h-full w-full">
+                <div className=" absolute rounded-full p-3 bg-white/30 bottom-0 right-0">
+                  <BsCameraFill className="text-3xl text-white	 " />
+                </div>
+                <img
+                  alt="banner"
+                  className="w-full h-full object-fill rounded-lg"
+                  src={mapTiketData}
+                />
+              </div>
             )}
           </Upload>
         </Form.Item>

@@ -56,6 +56,28 @@ export const createAcaraAction = createAsyncThunk(
   }
 );
 
+export const updateAcaraAction = createAsyncThunk(
+  TYPE.PATCH_ACARA,
+  async ({ body, acaraId }, { dispatch }) => {
+    return await new Promise((resolve, reject) => {
+      serviceApi({
+        withToken: true,
+        endpoint: endpoints.acara,
+        method: httpMethod.patch,
+        body,
+        optionalHeaders: { id: acaraId },
+      })
+        .then((res) => {
+          dispatch(getAcaraAction()).catch(() => {});
+          resolve(res.data);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
+);
+
 const acaraSlice = createSlice({
   name: "acara",
   initialState,
@@ -84,6 +106,19 @@ const acaraSlice = createSlice({
       state.isErrorOn = false;
     });
     builder.addCase(createAcaraAction.rejected, (state) => {
+      state.isLoadingOn = false;
+      state.isErrorOn = true;
+    });
+
+    builder.addCase(updateAcaraAction.pending, (state) => {
+      state.isLoadingOn = true;
+      state.isErrorOn = false;
+    });
+    builder.addCase(updateAcaraAction.fulfilled, (state) => {
+      state.isLoadingOn = false;
+      state.isErrorOn = false;
+    });
+    builder.addCase(updateAcaraAction.rejected, (state) => {
       state.isLoadingOn = false;
       state.isErrorOn = true;
     });

@@ -1,10 +1,11 @@
 import { Layout, Menu } from "antd";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import "./index.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import { logoTransparent } from "../../../assets/images";
 import ManagementIcon from "../../../assets/icon/management";
 import ReportIcon from "../../../assets/icon/reporting";
+import { ContextApp } from "../../../layout";
 
 const { Sider } = Layout;
 
@@ -19,6 +20,8 @@ const Asider = () => {
       onClick,
     };
   }
+
+  const { setDataIndex } = useContext(ContextApp);
 
   const { pathname } = useLocation();
   const title = pathname
@@ -45,6 +48,7 @@ const Asider = () => {
           key: "acara",
           label: "Acara",
           onClick: () => {
+            setDataIndex(0);
             navigate("/desktop/manajemen-acara");
           },
         }),
@@ -52,6 +56,7 @@ const Asider = () => {
           key: "penyelenggara",
           label: "Penyelenggara",
           onClick: () => {
+            setDataIndex(0);
             navigate("/desktop/manajemen-penyelenggara");
           },
         }),
@@ -59,6 +64,7 @@ const Asider = () => {
           key: "user",
           label: "User",
           onClick: () => {
+            setDataIndex(0);
             navigate("/desktop/manajemen-user");
           },
         }),
