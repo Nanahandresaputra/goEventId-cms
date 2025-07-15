@@ -1,4 +1,4 @@
-import { Button, Table, Tag } from "antd";
+import { Button, Popconfirm, Table, Tag } from "antd";
 import React, { useCallback, useContext, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAcaraAction } from "../../../store/features/management/acara";
@@ -9,12 +9,14 @@ import StatusAcaraTag from "../../atoms/generate-tag/status-acara";
 import { ContextApp } from "../../../layout";
 import FormAcara from "./form-acara";
 import { statusAcara } from "../../../helpers/status-data";
-import { BiEdit } from "react-icons/bi";
+import { BiEdit, BiTrash } from "react-icons/bi";
 import dayjs from "dayjs";
 import "dayjs/locale/id";
 
 const MainContentAcara = () => {
-  const { acaraList, isLoadingGet } = useSelector((state) => state.acara);
+  const { acaraList, isLoadingGet, isLoadingOn } = useSelector(
+    (state) => state.acara
+  );
 
   const {
     setSelectedAcara,
@@ -22,6 +24,7 @@ const MainContentAcara = () => {
     filterStatus,
     formAcara,
     openModalAcara,
+    deleteDataAcara,
     getDatasKabupatenKota,
   } = useContext(ContextAcara);
 
@@ -80,32 +83,46 @@ const MainContentAcara = () => {
       dataIndex: "action",
       key: "action",
       width: "10%",
+      fixed: "right",
       render: (_, record) => {
         return (
           record?.status === statusAcara.draft.value && (
-            <Button
-              type="primary"
-              className="flex justify-center items-center"
-              onClick={() => {
-                getDatasKabupatenKota({ provinsiId: record.provinsi.id });
-                formAcara.setFieldsValue({
-                  ...record,
-                  operation: "u",
-                  waktu_acara: dayjs(record.waktu_acara),
-                  kategori_id: record.kategori.id,
-                  kabupaten_kota_id: record.kabupatenkota.id,
-                  provinsi_id: record.provinsi.id,
-                  user_id_penyelenggara: record.penyelenggara.id,
-                });
-                openModalAcara();
-                console.log({
-                  ...record,
-                  operation: "u",
-                  waktu_acara: dayjs(record.waktu_acara),
-                });
-              }}
-              icon={<BiEdit className="text-2xl" />}
-            />
+            <div className="flex items-center space-x-3">
+              <Button
+                type="primary"
+                className="flex justify-center items-center"
+                onClick={() => {
+                  getDatasKabupatenKota({ provinsiId: record.provinsi.id });
+                  formAcara.setFieldsValue({
+                    ...record,
+                    operation: "u",
+                    waktu_acara: dayjs(record.waktu_acara),
+                    kategori_id: record.kategori.id,
+                    kabupaten_kota_id: record.kabupatenkota.id,
+                    provinsi_id: record.provinsi.id,
+                    user_id_penyelenggara: record.penyelenggara.id,
+                  });
+                  openModalAcara();
+                }}
+                icon={<BiEdit className="text-2xl" />}
+              />
+              <Popconfirm
+                title="Apakah Kamu yakin?"
+                description="Data akan hilang sepenuh nya saat kamu hapus!"
+                onConfirm={() => deleteDataAcara({ acaraId: record?.id })}
+                // onCancel={cancel}
+                okText="Hapus"
+                cancelText="Batal"
+              >
+                <Button
+                  color="danger"
+                  variant="solid"
+                  className="flex justify-center items-center"
+                  loading={isLoadingOn}
+                  icon={<BiTrash className="text-2xl" />}
+                />
+              </Popconfirm>
+            </div>
           )
         );
       },
@@ -177,7 +194,7 @@ const MainContentAcara = () => {
         //   onClick: () => {},
         //   onMouseEnter: (e) => e.stopPropagation(),
         // })}
-        scroll={{ y: "calc(57vh - 4em)", x: true }}
+        scroll={{ y: "calc(57vh - 4em)", x: "max-content" }}
       />
     </section>
   );

@@ -20,6 +20,7 @@ import {
 } from "../../../store/features/management/regional";
 import {
   createAcaraAction,
+  deleteAcaraAction,
   updateAcaraAction,
 } from "../../../store/features/management/acara";
 import { notifSuccess } from "../../../helpers/notif";
@@ -52,6 +53,7 @@ const ManagementAcara = () => {
   };
 
   const [selectedAcara, setSelectedAcara] = useState({});
+  const [selectedTiketAcara, setSelectedTiketAcara] = useState({});
 
   const [filterCategory, setFilterCategory] = useState(-1);
   const [filterStatus, setFilterStatus] = useState(-1);
@@ -122,6 +124,14 @@ const ManagementAcara = () => {
     dispatch(getKabupateKotaAction({ provinsiId })).catch(() => {});
   }, []);
 
+  const deleteDataAcara = useCallback(({ acaraId }) => {
+    dispatch(deleteAcaraAction({ acaraId }))
+      .then(() => {
+        notifSuccess({ method: "delete" });
+      })
+      .catch(() => {});
+  }, []);
+
   const createDataAcara = useCallback((body) => {
     dispatch(createAcaraAction({ body }))
       .then(() => {
@@ -175,6 +185,9 @@ const ManagementAcara = () => {
         formTicket,
         createDataAcara,
         updateDataAcara,
+        deleteDataAcara,
+        selectedTiketAcara,
+        setSelectedTiketAcara,
       }}
     >
       <LayoutCanvas

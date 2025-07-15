@@ -1,15 +1,21 @@
-import { Button, Table } from "antd";
+import { Button, Popconfirm, Table } from "antd";
 import { useCallback, useContext, useEffect } from "react";
 import { ContextAcara } from "../../../pages/management/acara";
 import { useDispatch, useSelector } from "react-redux";
-import { getTiketAcaraAction } from "../../../store/features/management/tiket-acara";
+import {
+  deleteTiketAcaraAction,
+  getTiketAcaraAction,
+} from "../../../store/features/management/tiket-acara";
 import { formatter } from "../../../helpers/formatter";
 import { statusAcara } from "../../../helpers/status-data";
+import { notifSuccess } from "../../../helpers/notif";
+import { BiTrash } from "react-icons/bi";
 
 const DetailTicket = () => {
-  const { selectedAcara } = useContext(ContextAcara);
+  const { selectedAcara, openModalTicket, setSelectedTiketAcara } =
+    useContext(ContextAcara);
 
-  const { isLoadingGet, tiketAcaraList } = useSelector(
+  const { isLoadingGet, tiketAcaraList, isLoadingOn } = useSelector(
     (state) => state.tiketAcara
   );
 
@@ -42,9 +48,33 @@ const DetailTicket = () => {
       render: (_, record) => {
         return (
           selectedAcara?.status !== statusAcara.publish.value && (
-            <Button type="primary" onClick={() => console.log(record)}>
-              Edit
-            </Button>
+            <div className="flex items-center space-x-3">
+              <Button
+                type="primary"
+                onClick={() => {
+                  setSelectedTiketAcara({ operation: "u", ...record });
+                  openModalTicket();
+                }}
+              >
+                Edit
+              </Button>
+              <Popconfirm
+                title="Apakah Kamu yakin?"
+                description="Data akan hilang sepenuh nya saat kamu hapus!"
+                onConfirm={() => deleteDataTicket({ tiketAcaraId: record?.id })}
+                // onCancel={cancel}
+                okText="Hapus"
+                cancelText="Batal"
+              >
+                <Button
+                  color="danger"
+                  variant="solid"
+                  className="flex justify-center items-center"
+                  loading={isLoadingOn}
+                  icon={<BiTrash className="text-2xl" />}
+                />
+              </Popconfirm>
+            </div>
           )
         );
       },
@@ -53,13 +83,24 @@ const DetailTicket = () => {
 
   // console.log({ selectedAcara });
 
-  console.log("acara_id --->", selectedAcara?.id);
-
   const getDataTickets = useCallback(() => {
     dispatch(getTiketAcaraAction({ acara_id: selectedAcara?.id })).catch(
       () => {}
     );
-  }, [selectedAcara]);
+  }, [selectedAcara, dispatch]);
+
+  const deleteDataTicket = useCallback(
+    ({ tiketAcaraId }) => {
+      dispatch(
+        deleteTiketAcaraAction({ tiketAcaraId, acaraId: selectedAcara.id })
+      )
+        .then(() => {
+          notifSuccess({ method: "delete" });
+        })
+        .catch(() => {});
+    },
+    [selectedAcara]
+  );
 
   useEffect(() => {
     getDataTickets();

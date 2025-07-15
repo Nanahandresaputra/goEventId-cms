@@ -78,11 +78,33 @@ export const updateAcaraAction = createAsyncThunk(
   }
 );
 
+export const deleteAcaraAction = createAsyncThunk(
+  TYPE.DELETE_ACARA,
+  async ({ acaraId }, { dispatch }) => {
+    return await new Promise((resolve, reject) => {
+      serviceApi({
+        withToken: true,
+        endpoint: endpoints.acara,
+        method: httpMethod.delete,
+        optionalHeaders: { id: acaraId },
+      })
+        .then((res) => {
+          dispatch(getAcaraAction()).catch(() => {});
+          resolve(res.data);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
+);
+
 const acaraSlice = createSlice({
   name: "acara",
   initialState,
   reducers: {},
   extraReducers(builder) {
+    //=================== CASE GET //===================
     builder.addCase(getAcaraAction.pending, (state) => {
       state.isLoadingGet = true;
       state.isErrorGet = false;
@@ -97,6 +119,7 @@ const acaraSlice = createSlice({
       state.isErrorGet = true;
     });
 
+    //=================== CASE POST //===================
     builder.addCase(createAcaraAction.pending, (state) => {
       state.isLoadingOn = true;
       state.isErrorOn = false;
@@ -110,6 +133,7 @@ const acaraSlice = createSlice({
       state.isErrorOn = true;
     });
 
+    //=================== CASE UPDATE //===================
     builder.addCase(updateAcaraAction.pending, (state) => {
       state.isLoadingOn = true;
       state.isErrorOn = false;
@@ -119,6 +143,20 @@ const acaraSlice = createSlice({
       state.isErrorOn = false;
     });
     builder.addCase(updateAcaraAction.rejected, (state) => {
+      state.isLoadingOn = false;
+      state.isErrorOn = true;
+    });
+
+    //=================== CASE DELETE //===================
+    builder.addCase(deleteAcaraAction.pending, (state) => {
+      state.isLoadingOn = true;
+      state.isErrorOn = false;
+    });
+    builder.addCase(deleteAcaraAction.fulfilled, (state) => {
+      state.isLoadingOn = false;
+      state.isErrorOn = false;
+    });
+    builder.addCase(deleteAcaraAction.rejected, (state) => {
       state.isLoadingOn = false;
       state.isErrorOn = true;
     });

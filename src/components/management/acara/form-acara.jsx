@@ -40,7 +40,7 @@ const FormAcara = () => {
 
   const [html, setHtml] = useState("");
 
-  const initialVal = formAcara.getFieldsValue();
+  const initialVal = formAcara?.getFieldsValue();
 
   const handleChangeBanner = (info) => {
     handleImageUpload({ file: info?.fileList?.[0]?.originFileObj })
@@ -90,8 +90,6 @@ const FormAcara = () => {
 
         delete body.operation;
 
-        console.log("body send -->", body);
-
         if (initialVal?.operation === "u") {
           updateDataAcara(body, selectedAcara?.id);
         } else {
@@ -103,18 +101,35 @@ const FormAcara = () => {
 
   useEffect(() => {
     if (initialVal?.operation === "u") {
-      setBannerData(`data:image/png;base64,${selectedAcara?.banner_img}`);
-      setMapTiketData(`data:image/png;base64,${selectedAcara?.map_tiket_img}`);
+      if (bannerData === null) {
+        setBannerData(`data:image/png;base64,${selectedAcara?.banner_img}`);
+      }
+      if (mapTiketData === null) {
+        setMapTiketData(
+          `data:image/png;base64,${selectedAcara?.map_tiket_img}`
+        );
+      }
     }
   }, [initialVal]);
 
   useEffect(() => {
     if (kabupatenkotaOptions?.length > 0) {
-      formAcara.setFieldsValue({
-        kabupaten_kota_id: kabupatenkotaOptions[0]?.value,
-      });
+      if (initialVal?.operation === "u") {
+        formAcara?.setFieldsValue({
+          kabupaten_kota_id:
+            kabupatenkotaOptions[
+              kabupatenkotaOptions?.findIndex(
+                (data) => data?.value === selectedAcara?.kabupatenkota?.id
+              )
+            ]?.value,
+        });
+      } else {
+        formAcara?.setFieldsValue({
+          kabupaten_kota_id: kabupatenkotaOptions[0]?.value,
+        });
+      }
     }
-  }, [kabupatenkotaOptions]);
+  }, [kabupatenkotaOptions, initialVal]);
   return (
     <Modal
       width={"35%"}

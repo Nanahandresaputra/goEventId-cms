@@ -7,7 +7,7 @@ const KeyLabelText = ({ keyVal = "test", value = "testval" }) => {
         <p>{keyVal}</p>
         <span>:</span>
       </div>
-      <div
+      <section
         className="col-span-6 pl-4 text-base text-justify"
         dangerouslySetInnerHTML={{ __html: value }}
       />

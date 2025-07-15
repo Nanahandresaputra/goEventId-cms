@@ -4,5 +4,14 @@ import goeBg from "./goe-bg.png";
 import bannerDummy from "./banner-dummy.jpg";
 import mapDummy from "./map-dummy.png";
 import logoTransparent from "./logo-transparent.png";
+import deleteWarn from "./delete-warn.png";
 
-export { bgWave, logo, goeBg, bannerDummy, mapDummy, logoTransparent };
+export {
+  bgWave,
+  logo,
+  goeBg,
+  bannerDummy,
+  mapDummy,
+  logoTransparent,
+  deleteWarn,
+};

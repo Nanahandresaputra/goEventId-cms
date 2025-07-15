@@ -1,14 +1,28 @@
 import React, { useContext } from "react";
 import KeyLabelText from "../../atoms/other/key-label-text";
-import { Button, Collapse, Empty, Image } from "antd";
+import { Button, Collapse, Empty, Image, Popconfirm } from "antd";
 import DetailTicket from "./detail-ticket";
 import { ContextAcara } from "../../../pages/management/acara";
 import { formatDate } from "../../../helpers/date-format";
 import FormTicket from "./form-ticket";
 import { statusAcara } from "../../../helpers/status-data";
+import { useSelector } from "react-redux";
 
 const DetailContentAcara = () => {
-  const { selectedAcara, openModalTicket } = useContext(ContextAcara);
+  const {
+    selectedAcara,
+    openModalTicket,
+    setSelectedTiketAcara,
+    updateDataAcara,
+  } = useContext(ContextAcara);
+
+  const { isLoadingOn } = useSelector((state) => state.acara);
+
+  // const htmlDecode = (content) => {
+  //   let e = document.createElement("div");
+  //   e.innerHTML = content;
+  //   return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+  // };
 
   const items = [
     {
@@ -47,19 +61,34 @@ const DetailContentAcara = () => {
         </div>
       ),
       extra: (
-        <Button
-          type="primary"
-          disabled={selectedAcara?.status !== statusAcara.draft.value}
-          onClick={(event) => {
-            event.stopPropagation();
-          }}
+        <Popconfirm
+          title="Publish Acara"
+          description="Setelah Acara dipublish maka tidak dapat mengubah data Acara maupun Tiket!"
+          onConfirm={() =>
+            updateDataAcara(
+              { status: statusAcara.publish.value },
+              selectedAcara?.id
+            )
+          }
+          // onCancel={cancel}
+          okText="Publish"
+          cancelText="Batal"
         >
-          {selectedAcara?.status === statusAcara.publish.value
-            ? "Published"
-            : selectedAcara?.status === statusAcara.expired.value
-            ? statusAcara.expired.label
-            : statusAcara.publish.label}
-        </Button>
+          <Button
+            type="primary"
+            disabled={selectedAcara?.status !== statusAcara.draft.value}
+            onClick={(event) => {
+              event.stopPropagation();
+            }}
+            loading={isLoadingOn}
+          >
+            {selectedAcara?.status === statusAcara.publish.value
+              ? "Published"
+              : selectedAcara?.status === statusAcara.expired.value
+              ? statusAcara.expired.label
+              : statusAcara.publish.label}
+          </Button>
+        </Popconfirm>
       ),
     },
     {
@@ -88,6 +117,7 @@ const DetailContentAcara = () => {
           onClick={(event) => {
             event.stopPropagation();
             openModalTicket();
+            setSelectedTiketAcara({});
           }}
         >
           Tambah Tiket
@@ -95,6 +125,7 @@ const DetailContentAcara = () => {
       ),
     },
   ];
+
   return (
     <section className="h-full w-full">
       <FormTicket />
