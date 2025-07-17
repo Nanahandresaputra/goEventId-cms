@@ -1,12 +1,24 @@
 import { Button, Table, Tag } from "antd";
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, { useCallback, useContext, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUsersAction } from "../../../store/features/management/users";
 import StatusActivationTag from "../../atoms/generate-tag/status-activation";
 import RolerUserTag from "../../atoms/generate-tag/role-user";
+import { ContextUsers } from "../../../pages/management/user";
+import FormUser from "./form-user";
+import { BiEdit } from "react-icons/bi";
+import { ContextApp } from "../../../layout";
+import { parseJwt } from "../../../helpers/decode-token";
 
 const MainContentUsers = () => {
   const { usersList } = useSelector((state) => state.users);
+  const { setSelectedUsers, formUsers, openModalUsers } =
+    useContext(ContextUsers);
+
+  const { wildSearch } = useContext(ContextApp);
+
+  const userData = localStorage?.token ? parseJwt(localStorage.token) : {};
+
   const columns = [
     {
       title: "Nama",
@@ -42,17 +54,31 @@ const MainContentUsers = () => {
       align: "right",
       render: (_, record) => {
         return (
-          <Button type="primary" onClick={() => console.log(record)}>
-            Edit
-          </Button>
+          userData?.id !== record?.id && (
+            <Button
+              type="primary"
+              className="flex justify-center items-center"
+              onClick={() => {
+                formUsers?.setFieldsValue({ ...record, operation: "u" });
+                openModalUsers();
+              }}
+              icon={<BiEdit className="text-2xl" />}
+            />
+          )
         );
       },
     },
   ];
 
   const dataSource = useMemo(() => {
-    return usersList;
-  }, [usersList]);
+    const filterData = usersList?.filter((data) =>
+      wildSearch === ""
+        ? data
+        : data.nama.toLowerCase().includes(wildSearch.toLowerCase())
+    );
+
+    return filterData;
+  }, [usersList, wildSearch]);
 
   const dispatch = useDispatch();
 
@@ -64,33 +90,9 @@ const MainContentUsers = () => {
     getDatas();
   }, []);
 
-  // const handleSubmit = () => {
-
-  // };
-
-  // const showData = useMemo(() => {
-  //   return wildSearch.length > 0
-  //     ? companies.filter((company) =>
-  //         company?.name?.toLowerCase()?.includes(wildSearch.toLowerCase())
-  //       )
-  //     : companies;
-  // }, [wildSearch, companies]);
-
-  // useEffect(() => {
-  //   getCompaniesData();
-  // }, []);
-
   return (
     <section>
-      {/* <Modal
-          title={"Tambah Perusahaan"}
-          open={isOpenForm}
-          onCancel={closeModal}
-          onOk={handleSubmit}
-          confirmLoading={isLoading}
-        >
-          <FormModalCompany />
-        </Modal> */}
+      <FormUser />
       <Table
         columns={columns}
         size="large"
@@ -99,12 +101,13 @@ const MainContentUsers = () => {
           pageSizeOptions: [5, 10, 15, 20, 30, 50, 100],
           showSizeChanger: true,
         }}
-        // pagination={false}
-        // onrecord={(record) => ({
-        //   onClick: () => {},
-        //   onMouseEnter: (e) => e.stopPropagation(),
-        // })}
-
+        onRow={(record) => {
+          return {
+            onClick: () => {
+              setSelectedUsers({ operation: "u", ...record });
+            }, // click row
+          };
+        }}
         scroll={{ y: "calc(65vh - 4em)", x: true }}
       />
     </section>

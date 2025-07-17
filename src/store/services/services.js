@@ -19,6 +19,7 @@ export const serviceApi = async ({
       ...(withToken && { headers: { ...optionalHeaders, token } }),
     })
       .then((res) => {
+        console.log("res then -->", res);
         if (res.status === 200 || res.status === 201) {
           if (res.data?.statusCode === 200) {
             resolve(res.data);
@@ -26,7 +27,7 @@ export const serviceApi = async ({
             reject(res.data);
           }
         } else {
-          reject();
+          reject(res.data);
         }
       })
       .catch((err) => {

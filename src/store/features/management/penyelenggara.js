@@ -14,6 +14,9 @@ const initialState = {
   penyelenggaraList: [],
   isLoadingGet: false,
   isErrorGet: false,
+
+  isLoadingOn: false,
+  isErrorOn: false,
 };
 
 export const getPenyelenggaraAction = createAsyncThunk(
@@ -35,23 +38,95 @@ export const getPenyelenggaraAction = createAsyncThunk(
   }
 );
 
+export const createPenyelenggaraAction = createAsyncThunk(
+  TYPE.POST_PENYELENGGARA,
+  async ({ body }, { dispatch }) => {
+    return await new Promise((resolve, reject) => {
+      serviceApi({
+        withToken: true,
+        endpoint: endpoints.penyelenggara,
+        method: httpMethod.post,
+        body,
+      })
+        .then((res) => {
+          dispatch(getPenyelenggaraAction()).catch(() => {});
+          resolve(res.data);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
+);
+
+export const updatePenyelenggaraAction = createAsyncThunk(
+  TYPE.PATCH_PENYELENGGARA,
+  async ({ body, penyeleggaraId }, { dispatch }) => {
+    return await new Promise((resolve, reject) => {
+      serviceApi({
+        withToken: true,
+        endpoint: endpoints.penyelenggara,
+        method: httpMethod.patch,
+        body,
+        optionalHeaders: { id: penyeleggaraId },
+      })
+        .then((res) => {
+          dispatch(getPenyelenggaraAction()).catch(() => {});
+          resolve(res.data);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
+);
+
 const penyelenggaraSlice = createSlice({
   name: "penyelenggara",
   initialState,
   reducers: {},
   extraReducers(builder) {
+    //=================== CASE GET //===================
     builder.addCase(getPenyelenggaraAction.pending, (state) => {
       state.isLoadingGet = true;
-      state.isError = false;
+      state.isErrorGet = false;
     });
     builder.addCase(getPenyelenggaraAction.fulfilled, (state, action) => {
       state.isLoadingGet = false;
-      state.isError = false;
+      state.isErrorGet = false;
       state.penyelenggaraList = action.payload;
     });
     builder.addCase(getPenyelenggaraAction.rejected, (state) => {
       state.isLoadingGet = false;
-      state.isError = true;
+      state.isErrorGet = true;
+    });
+
+    //=================== CASE POST //===================
+    builder.addCase(createPenyelenggaraAction.pending, (state) => {
+      state.isLoadingOn = true;
+      state.isErrorOn = false;
+    });
+    builder.addCase(createPenyelenggaraAction.fulfilled, (state) => {
+      state.isLoadingOn = false;
+      state.isErrorOn = false;
+    });
+    builder.addCase(createPenyelenggaraAction.rejected, (state) => {
+      state.isLoadingOn = false;
+      state.isErrorOn = true;
+    });
+
+    //=================== CASE PATCH //===================
+    builder.addCase(updatePenyelenggaraAction.pending, (state) => {
+      state.isLoadingOn = true;
+      state.isErrorOn = false;
+    });
+    builder.addCase(updatePenyelenggaraAction.fulfilled, (state) => {
+      state.isLoadingOn = false;
+      state.isErrorOn = false;
+    });
+    builder.addCase(updatePenyelenggaraAction.rejected, (state) => {
+      state.isLoadingOn = false;
+      state.isErrorOn = true;
     });
   },
 });

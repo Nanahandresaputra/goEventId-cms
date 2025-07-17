@@ -113,8 +113,8 @@ const FormAcara = () => {
   }, [initialVal]);
 
   useEffect(() => {
-    if (kabupatenkotaOptions?.length > 0) {
-      if (initialVal?.operation === "u") {
+    if (initialVal?.operation === "u") {
+      if (kabupatenkotaOptions?.length > 0) {
         formAcara?.setFieldsValue({
           kabupaten_kota_id:
             kabupatenkotaOptions[
@@ -130,6 +130,7 @@ const FormAcara = () => {
       }
     }
   }, [kabupatenkotaOptions, initialVal]);
+
   return (
     <Modal
       width={"35%"}
@@ -151,7 +152,10 @@ const FormAcara = () => {
         autoComplete="off"
         validateTrigger="onSubmit"
       >
-        <Form.Item className="col-span-2 opacity-0" name={"operation"} />
+        <Form.Item
+          className="col-span-2 opacity-0 !h-0 !w-0 !m-0"
+          name={"operation"}
+        />
         <Form.Item
           className={"col-span-2"}
           rules={[

@@ -17,7 +17,7 @@ const HeaderFilterPenjualan = ({
   };
 
   const selectPropsPenyelenggara = {
-    name: "kategori",
+    name: "penyelenggara",
     label: false,
     placeholder: "Pilih Penyelenggara",
     className: "w-full !my-0 !ml-0 !mr-3",

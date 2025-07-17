@@ -39,16 +39,16 @@ const acaraSlice = createSlice({
   extraReducers(builder) {
     builder.addCase(getReportingPenjualanAction.pending, (state) => {
       state.isLoadingGet = true;
-      state.isError = false;
+      state.isErrorGet = false;
     });
     builder.addCase(getReportingPenjualanAction.fulfilled, (state, action) => {
       state.isLoadingGet = false;
-      state.isError = false;
+      state.isErrorGet = false;
       state.penjualanList = action.payload;
     });
     builder.addCase(getReportingPenjualanAction.rejected, (state) => {
       state.isLoadingGet = false;
-      state.isError = true;
+      state.isErrorGet = true;
     });
   },
 });

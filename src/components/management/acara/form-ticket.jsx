@@ -8,7 +8,6 @@ import {
   createTiketAcaraAction,
   updateTiketAcaraAction,
 } from "../../../store/features/management/tiket-acara";
-import { notifSuccess } from "../../../helpers/notif";
 
 const FormTicket = () => {
   const {
@@ -28,7 +27,6 @@ const FormTicket = () => {
     dispatch(createTiketAcaraAction({ body }))
       .then(() => {
         formTicket.resetFields();
-        notifSuccess({ method: "create" });
         setModalTicket(false);
       })
       .catch(() => {});
@@ -38,7 +36,6 @@ const FormTicket = () => {
     dispatch(updateTiketAcaraAction({ body, tiketAcaraId }))
       .then(() => {
         formTicket.resetFields();
-        notifSuccess({ method: "edit" });
         setModalTicket(false);
       })
       .catch(() => {});
@@ -58,7 +55,7 @@ const FormTicket = () => {
         if (selectedTiketAcara?.operation === "u") {
           updateDataTicket(body, selectedTiketAcara?.id);
         } else {
-          createDataTicket({ id: selectedAcara?.id, ...body });
+          createDataTicket(body);
         }
       })
       .catch(() => {});
@@ -87,8 +84,8 @@ const FormTicket = () => {
         validateTrigger="onSubmit"
         className="w-full grid grid-cols-2 gap-x-5"
       >
-        <Form.Item name={"operation"} className="opacity-0" />
-        <Form.Item name={"id"} className="opacity-0" />
+        <Form.Item name={"operation"} className="opacity-0 !h-0 !w-0 !m-0" />
+        <Form.Item name={"id"} className="opacity-0 !h-0 !w-0 !m-0" />
         <InputText
           name={"tipe_tiket"}
           label={"Tipet Tiket"}

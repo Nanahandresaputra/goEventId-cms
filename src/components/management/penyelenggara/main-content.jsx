@@ -3,12 +3,20 @@ import React, { useCallback, useContext, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getPenyelenggaraAction } from "../../../store/features/management/penyelenggara";
 import { ContextPenyelenggara } from "../../../pages/management/penyelenggara";
+import { ContextApp } from "../../../layout";
+import FormPenyelenggara from "./form-penyelenggara";
+import { BiEdit } from "react-icons/bi";
 
 const MainContentPenyelenggara = () => {
   const { penyelenggaraList, isLoadingGet } = useSelector(
     (state) => state.penyelenggara
   );
-  const { setSelectedPenyelenggara } = useContext(ContextPenyelenggara);
+  const {
+    setSelectedPenyelenggara,
+    formPenyelenggara,
+    openModalPenyelenggara,
+  } = useContext(ContextPenyelenggara);
+  const { wildSearch, dataIndex, setDataIndex } = useContext(ContextApp);
 
   const dispatch = useDispatch();
 
@@ -33,9 +41,15 @@ const MainContentPenyelenggara = () => {
       width: "10%",
       render: (_, record) => {
         return (
-          <Button type="primary" onClick={() => console.log(record)}>
-            Edit
-          </Button>
+          <Button
+            type="primary"
+            className="flex justify-center items-center"
+            onClick={() => {
+              formPenyelenggara.setFieldsValue({ operation: "u", ...record });
+              openModalPenyelenggara();
+            }}
+            icon={<BiEdit className="text-2xl" />}
+          />
         );
       },
     },
@@ -50,39 +64,26 @@ const MainContentPenyelenggara = () => {
   }, []);
 
   const dataSource = useMemo(() => {
-    if (penyelenggaraList?.length > 0) {
-      setSelectedPenyelenggara(penyelenggaraList[0]);
+    const filterData = penyelenggaraList?.filter((data) =>
+      wildSearch === ""
+        ? data
+        : data.nama.toLowerCase().includes(wildSearch.toLowerCase())
+    );
+
+    return filterData;
+  }, [penyelenggaraList, wildSearch]);
+
+  useEffect(() => {
+    if (dataSource?.length > 0) {
+      setSelectedPenyelenggara({ ...dataSource[dataIndex], operation: "u" });
+    } else {
+      setSelectedPenyelenggara({});
     }
-    return penyelenggaraList;
-  }, [penyelenggaraList]);
-
-  // const handleSubmit = () => {
-
-  // };
-
-  // const showData = useMemo(() => {
-  //   return wildSearch.length > 0
-  //     ? companies.filter((company) =>
-  //         company?.name?.toLowerCase()?.includes(wildSearch.toLowerCase())
-  //       )
-  //     : companies;
-  // }, [wildSearch, companies]);
-
-  // useEffect(() => {
-  //   getCompaniesData();
-  // }, []);
+  }, [dataSource, dataIndex]);
 
   return (
     <section>
-      {/* <Modal
-          title={"Tambah Perusahaan"}
-          open={isOpenForm}
-          onCancel={closeModal}
-          onOk={handleSubmit}
-          confirmLoading={isLoading}
-        >
-          <FormModalCompany />
-        </Modal> */}
+      <FormPenyelenggara />
       <Table
         loading={isLoadingGet}
         columns={columns}
@@ -92,12 +93,16 @@ const MainContentPenyelenggara = () => {
           pageSizeOptions: [5, 10, 15, 20, 30, 50, 100],
           showSizeChanger: true,
         }}
-        // pagination={false}
-        // onrecord={(record) => ({
-        //   onClick: () => {},
-        //   onMouseEnter: (e) => e.stopPropagation(),
-        // })}
-
+        onRow={(record) => {
+          return {
+            onClick: () => {
+              setSelectedPenyelenggara({ operation: "u", ...record });
+              setDataIndex(
+                dataSource?.findIndex((data) => data?.id === record?.id)
+              );
+            }, // click row
+          };
+        }}
         scroll={{ y: "calc(65vh - 4em)", x: true }}
       />
     </section>

@@ -23,7 +23,6 @@ import {
   deleteAcaraAction,
   updateAcaraAction,
 } from "../../../store/features/management/acara";
-import { notifSuccess } from "../../../helpers/notif";
 
 export const ContextAcara = createContext({});
 
@@ -125,18 +124,13 @@ const ManagementAcara = () => {
   }, []);
 
   const deleteDataAcara = useCallback(({ acaraId }) => {
-    dispatch(deleteAcaraAction({ acaraId }))
-      .then(() => {
-        notifSuccess({ method: "delete" });
-      })
-      .catch(() => {});
+    dispatch(deleteAcaraAction({ acaraId })).catch(() => {});
   }, []);
 
   const createDataAcara = useCallback((body) => {
     dispatch(createAcaraAction({ body }))
       .then(() => {
         formAcara.resetFields();
-        notifSuccess({ method: "create" });
         setModalAcara(false);
       })
       .catch(() => {});
@@ -146,7 +140,6 @@ const ManagementAcara = () => {
     dispatch(updateAcaraAction({ body, acaraId }))
       .then(() => {
         formAcara.resetFields();
-        notifSuccess({ method: "edit" });
         setModalAcara(false);
       })
       .catch(() => {});

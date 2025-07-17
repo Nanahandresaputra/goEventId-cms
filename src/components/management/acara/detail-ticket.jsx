@@ -8,7 +8,6 @@ import {
 } from "../../../store/features/management/tiket-acara";
 import { formatter } from "../../../helpers/formatter";
 import { statusAcara } from "../../../helpers/status-data";
-import { notifSuccess } from "../../../helpers/notif";
 import { BiTrash } from "react-icons/bi";
 
 const DetailTicket = () => {
@@ -52,8 +51,8 @@ const DetailTicket = () => {
               <Button
                 type="primary"
                 onClick={() => {
-                  setSelectedTiketAcara({ operation: "u", ...record });
                   openModalTicket();
+                  setSelectedTiketAcara({ operation: "u", ...record });
                 }}
               >
                 Edit
@@ -93,11 +92,7 @@ const DetailTicket = () => {
     ({ tiketAcaraId }) => {
       dispatch(
         deleteTiketAcaraAction({ tiketAcaraId, acaraId: selectedAcara.id })
-      )
-        .then(() => {
-          notifSuccess({ method: "delete" });
-        })
-        .catch(() => {});
+      ).catch(() => {});
     },
     [selectedAcara]
   );

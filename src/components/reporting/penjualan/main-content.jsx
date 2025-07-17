@@ -7,20 +7,52 @@ import { formatDate } from "../../../helpers/date-format";
 import StatusAcaraTag from "../../atoms/generate-tag/status-acara";
 import { formatter } from "../../../helpers/formatter";
 import { ContextReportingPenjualan } from "../../../pages/reporting/penjualan";
+import { ContextApp } from "../../../layout";
 
 const MainContentPenjualan = () => {
-  const { penjualanList } = useSelector((state) => state.penjualan);
-  const { setDetailPenjualan } = useContext(ContextReportingPenjualan);
+  const { penjualanList, isLoadingGet } = useSelector(
+    (state) => state.penjualan
+  );
+  const { setDetailPenjualan, filterDateRange, filterPenyelenggara } =
+    useContext(ContextReportingPenjualan);
+
+  const { dataIndex, setDataIndex } = useContext(ContextApp);
 
   const dataSource = useMemo(() => {
-    if (penjualanList?.length > 0) {
-      setDetailPenjualan({
-        ...penjualanList[0]?.details,
-        nama_acara: penjualanList[0].nama_acara,
-      });
+    // if (penjualanList?.length > 0) {
+    //   setDetailPenjualan({
+    //     ...penjualanList[0]?.details,
+    //     nama_acara: penjualanList[0].nama_acara,
+    //   });
+    // }
+
+    const filterData = penjualanList
+      .filter((data) =>
+        filterDateRange.startDate === -1 && filterDateRange.endDate === -1
+          ? data
+          : new Date(
+              formatDate({ time: data?.waktu_acara, formatDate: "YYYY-MM-DD" })
+            ).getTime() >= filterDateRange.startDate &&
+            new Date(
+              formatDate({ time: data?.waktu_acara, formatDate: "YYYY-MM-DD" })
+            ).getTime() <= filterDateRange.endDate
+      )
+      .filter((data) =>
+        filterPenyelenggara === -1
+          ? data
+          : data?.details?.penyelenggara_id === filterPenyelenggara
+      );
+
+    return filterData;
+  }, [penjualanList, filterDateRange, filterPenyelenggara]);
+
+  useEffect(() => {
+    if (dataSource?.length > 0) {
+      setDetailPenjualan(dataSource[dataIndex]);
+    } else {
+      setDetailPenjualan({});
     }
-    return penjualanList;
-  }, [penjualanList]);
+  }, [dataSource, dataIndex]);
 
   const columns = [
     {
@@ -100,6 +132,7 @@ const MainContentPenjualan = () => {
     <section>
       <Table
         columns={columns}
+        loading={isLoadingGet}
         size="large"
         dataSource={dataSource}
         pagination={{
@@ -108,6 +141,15 @@ const MainContentPenjualan = () => {
         }}
         scroll={{ y: "calc(52vh - 4em)", x: "max-content" }}
         footer={dataSource.length > 0 && footerShow}
+        onRow={(record) => {
+          return {
+            onClick: () => {
+              setDataIndex(
+                dataSource?.findIndex((data) => data?.id === record?.id)
+              );
+            }, // click row
+          };
+        }}
       />
     </section>
   );

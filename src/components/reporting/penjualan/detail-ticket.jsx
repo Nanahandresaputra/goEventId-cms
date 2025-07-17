@@ -42,7 +42,7 @@ const DetailTicketPenjualan = () => {
   ];
 
   const dataSource = useMemo(() => {
-    return detailPenjualan?.tiket;
+    return detailPenjualan?.details?.tiket;
   }, [detailPenjualan]);
   return (
     <Table

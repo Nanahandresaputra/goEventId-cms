@@ -2,25 +2,51 @@
 
 import axios from "axios";
 import { toast } from "react-toastify";
+import { notifSuccess } from "./notif";
 
 export const interceptorsUtils = () => {
   axios.interceptors.response.use(
     (res) => {
+      const equalsErr = ["email or password invalid!"].includes(
+        res.data?.message
+      );
       console.log(res, "suceess ------");
-      if (
-        ![201, 200].includes(res.data?.statusCode) &&
-        res.data?.message !== "email or password invalid!"
-      ) {
+      if (![201, 200].includes(res.status) && equalsErr) {
         toast.error(res.data?.message);
       }
+
+      if (
+        ["post", "patch", "delete"].includes(res.config.method) &&
+        !equalsErr &&
+        !res.config.url.includes("goEventId/api/v1/auth/login")
+      ) {
+        if (res.config.method === "post" && res.data?.statusCode === 200) {
+          notifSuccess({ method: "create" });
+        } else if (
+          res.config.method === "patch" &&
+          res.data?.statusCode === 200
+        ) {
+          notifSuccess({ method: "edit" });
+        } else if (
+          res.config.method === "delete" &&
+          res.data?.statusCode === 200
+        ) {
+          notifSuccess({ method: "delete" });
+        } else {
+          toast.error(res.data?.message?.toString());
+        }
+      }
+
       return Promise.resolve(res);
     },
     (error) => {
       if (error?.response?.data) {
         toast.error(error?.response?.data?.message);
         if (
-          error?.response?.data?.statusCode === 401 &&
-          error?.response?.data?.message === "Unauthorized"
+          (error?.response?.data?.statusCode === 401 &&
+            error?.response?.data?.message === "Unauthorized") ||
+          (error?.response?.data?.statusCode === 403 &&
+            error?.response?.data?.message === "Forbidden")
         ) {
           localStorage.clear();
           window.location.href = "/login";

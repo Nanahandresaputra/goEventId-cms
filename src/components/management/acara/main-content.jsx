@@ -92,6 +92,7 @@ const MainContentAcara = () => {
                 type="primary"
                 className="flex justify-center items-center"
                 onClick={() => {
+                  openModalAcara();
                   getDatasKabupatenKota({ provinsiId: record.provinsi.id });
                   formAcara.setFieldsValue({
                     ...record,
@@ -102,7 +103,6 @@ const MainContentAcara = () => {
                     provinsi_id: record.provinsi.id,
                     user_id_penyelenggara: record.penyelenggara.id,
                   });
-                  openModalAcara();
                 }}
                 icon={<BiEdit className="text-2xl" />}
               />
@@ -133,22 +133,6 @@ const MainContentAcara = () => {
     className: "whitespace-nowrap",
     width: getColumnWidth(clm?.dataIndex, dataSource, clm?.title),
   }));
-
-  // const handleSubmit = () => {
-
-  // };
-
-  // const showData = useMemo(() => {
-  //   return wildSearch.length > 0
-  //     ? companies.filter((company) =>
-  //         company?.name?.toLowerCase()?.includes(wildSearch.toLowerCase())
-  //       )
-  //     : companies;
-  // }, [wildSearch, companies]);
-
-  // useEffect(() => {
-  //   getCompaniesData();
-  // }, []);
 
   const dispatch = useDispatch();
 
