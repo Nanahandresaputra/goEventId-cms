@@ -2,14 +2,14 @@ import { Button, Table } from "antd";
 import { useContext, useMemo } from "react";
 import { ContextReportingPenjualan } from "../../../pages/reporting/penjualan";
 import { formatter } from "../../../helpers/formatter";
+import { getColumnWidth } from "../../../helpers/table-column-width";
 
 const DetailTicketPenjualan = () => {
   const { detailPenjualan } = useContext(ContextReportingPenjualan);
 
-  // "tipe_tiket": "Tribun Selatan",
-  //                       "kuota": 6000,
-  //                       "tiket_terjual": 11,
-  //                       "harga_tiket": 200000
+  const dataSource = useMemo(() => {
+    return detailPenjualan?.details?.tiket ?? [];
+  }, [detailPenjualan]);
 
   const columns = [
     {
@@ -39,11 +39,13 @@ const DetailTicketPenjualan = () => {
       key: "pendapatan_tiket",
       render: (row) => `Rp ${formatter(row)}`,
     },
-  ];
+  ].map((clm) => ({
+    ...clm,
+    title: <span style={{ whiteSpace: "nowrap" }}>{clm.title}</span>,
+    className: "whitespace-nowrap",
+    width: getColumnWidth(clm?.dataIndex, dataSource, clm?.title),
+  }));
 
-  const dataSource = useMemo(() => {
-    return detailPenjualan?.details?.tiket;
-  }, [detailPenjualan]);
   return (
     <Table
       columns={columns}

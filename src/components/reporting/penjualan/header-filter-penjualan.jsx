@@ -2,12 +2,16 @@ import { MdEvent } from "react-icons/md";
 import RangeDateComp from "../../atoms/form/range-picker";
 import SelectComp from "../../atoms/form/selectComp";
 import { BiBuildings } from "react-icons/bi";
+import { parseJwt } from "../../../helpers/decode-token";
+import { role_user } from "../../../helpers/status-data";
 
 const HeaderFilterPenjualan = ({
   rangePickerCompPropsPenjualan,
   selectCompPenyelenggara,
   extraContent = () => {},
 }) => {
+  const userData = localStorage?.token ? parseJwt(localStorage.token) : {};
+
   const rangePickerPropsPenjualan = {
     name: "range",
     label: false,
@@ -31,17 +35,19 @@ const HeaderFilterPenjualan = ({
   return (
     <section className="w-full p-3 bg-[#225246] rounded-lg flex items-center justify-between space-x-3">
       <div className="flex items-center justify-between w-full">
-        <SelectComp
-          dark
-          label={selectPropsPenyelenggara.label}
-          name={selectPropsPenyelenggara.name}
-          // defaultValue={selectPropsPenyelenggara.defaultValue}
-          placeholder={selectPropsPenyelenggara.placeholder}
-          className={selectPropsPenyelenggara.className}
-          options={selectPropsPenyelenggara.options}
-          suffixIcon={selectPropsPenyelenggara.suffixIcon}
-          onChange={selectPropsPenyelenggara.onChange}
-        />
+        {userData?.role === role_user.admin.value && (
+          <SelectComp
+            dark
+            label={selectPropsPenyelenggara.label}
+            name={selectPropsPenyelenggara.name}
+            // defaultValue={selectPropsPenyelenggara.defaultValue}
+            placeholder={selectPropsPenyelenggara.placeholder}
+            className={selectPropsPenyelenggara.className}
+            options={selectPropsPenyelenggara.options}
+            suffixIcon={selectPropsPenyelenggara.suffixIcon}
+            onChange={selectPropsPenyelenggara.onChange}
+          />
+        )}
         <RangeDateComp
           name={rangePickerPropsPenjualan.name}
           label={rangePickerPropsPenjualan.label}

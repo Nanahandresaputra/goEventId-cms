@@ -33,7 +33,7 @@ export const beforeUpload = ({ file, setValidateImg }) => {
 
 export async function handleImageUpload({ file }) {
   const options = {
-    maxSizeMB: 0.04,
+    maxSizeMB: 0.5,
     maxWidthOrHeight: 1920,
     useWebWorker: true,
   };

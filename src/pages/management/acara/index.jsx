@@ -23,6 +23,9 @@ import {
   deleteAcaraAction,
   updateAcaraAction,
 } from "../../../store/features/management/acara";
+import { getTiketAcaraAction } from "../../../store/features/management/tiket-acara";
+import { parseJwt } from "../../../helpers/decode-token";
+import { role_user } from "../../../helpers/status-data";
 
 export const ContextAcara = createContext({});
 
@@ -112,7 +115,10 @@ const ManagementAcara = () => {
   }, []);
 
   const getDatasPenyelenggara = useCallback(() => {
-    dispatch(getPenyelenggaraAction()).catch(() => {});
+    const userData = localStorage?.token ? parseJwt(localStorage.token) : {};
+
+    userData?.role === role_user.admin.value &&
+      dispatch(getPenyelenggaraAction()).catch(() => {});
   }, []);
 
   const getDatasProvinsi = useCallback(() => {
@@ -144,6 +150,16 @@ const ManagementAcara = () => {
       })
       .catch(() => {});
   }, []);
+
+  const getDataTickets = useCallback(() => {
+    dispatch(getTiketAcaraAction({ acara_id: selectedAcara?.id })).catch(
+      () => {}
+    );
+  }, [selectedAcara]);
+
+  useEffect(() => {
+    getDataTickets();
+  }, [getDataTickets]);
 
   useEffect(() => {
     getDatasProvinsi();

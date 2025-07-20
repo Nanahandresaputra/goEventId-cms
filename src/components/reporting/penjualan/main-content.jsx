@@ -109,18 +109,18 @@ const MainContentPenjualan = () => {
       (accumulator, currentValue) => accumulator + currentValue.totalPenjualan,
       0
     );
-    const qty = dataSource.reduce(
-      (accumulator, currentValue) =>
-        accumulator + currentValue.totalTiketTerjual,
-      0
-    );
+    // const qty = dataSource.reduce(
+    //   (accumulator, currentValue) =>
+    //     accumulator + currentValue.totalTiketTerjual,
+    //   0
+    // );
 
     return (
-      <div className="grid grid-cols-6 w-full pr-[1em]">
+      <div className="flex items-center justify-between">
         <p className="font-semibold col-span-4">
           Grand Total Tiktet Terjual & Pendapatan
         </p>
-        <p className="font-semibold col-span-1 text-end">{qty}</p>
+        {/* <p className="font-semibold col-span-1 text-end">{qty}</p> */}
         <p className="font-semibold col-span-1 text-end">
           Rp {formatter(total)}
         </p>

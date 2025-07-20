@@ -95,6 +95,11 @@ const FormAcara = () => {
         } else {
           createDataAcara(body);
         }
+
+        setTimeout(() => {
+          setBannerData(null);
+          setMapTiketData(null);
+        }, 300);
       })
       .catch(() => {});
   };

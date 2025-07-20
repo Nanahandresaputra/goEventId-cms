@@ -6,6 +6,8 @@ import { ContextReportingPenjualan } from "../../../pages/reporting/penjualan";
 
 const DetailContentPenjualan = () => {
   const { detailPenjualan } = useContext(ContextReportingPenjualan);
+
+  console.log({ detailPenjualan });
   return (
     <section className="space-y-5">
       <h1 className="text-[#14182999] font-semibold text-xl">
@@ -16,7 +18,7 @@ const DetailContentPenjualan = () => {
           <KeyLabelText keyVal="Acara" value={detailPenjualan?.nama_acara} />
           <KeyLabelText
             keyVal="Penyelenggara"
-            value={detailPenjualan?.penyelenggara}
+            value={detailPenjualan?.details?.penyelenggara}
           />
         </div>
         <DetailTicketPenjualan />

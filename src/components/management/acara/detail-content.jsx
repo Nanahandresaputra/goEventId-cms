@@ -31,12 +31,13 @@ const DetailContentAcara = () => {
         <h1 className="text-[#14182999] font-semibold text-xl">Detail Acara</h1>
       ),
       children: (
-        <div className="space-y-6">
-          <div className="object-cover flex items-center w-full overflow-hidden h-36 rounded-lg">
+        <div className="space-y-6 w-full">
+          <div className="object-cover flex justify-center items-center w-full overflow-hidden rounded-lg">
             <Image
+              width={"100%"}
               src={`data:image/png;base64,${selectedAcara?.banner_img}`}
               alt="banner-img"
-              className="!h-full !w-full object-cover"
+              className=" !min-w-full !min-h-full !rounded-lg"
             />
           </div>
           <div className="space-y-1">

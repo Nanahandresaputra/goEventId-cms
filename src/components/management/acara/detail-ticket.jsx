@@ -1,11 +1,8 @@
 import { Button, Popconfirm, Table } from "antd";
-import { useCallback, useContext, useEffect } from "react";
+import { useCallback, useContext } from "react";
 import { ContextAcara } from "../../../pages/management/acara";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  deleteTiketAcaraAction,
-  getTiketAcaraAction,
-} from "../../../store/features/management/tiket-acara";
+import { deleteTiketAcaraAction } from "../../../store/features/management/tiket-acara";
 import { formatter } from "../../../helpers/formatter";
 import { statusAcara } from "../../../helpers/status-data";
 import { BiTrash } from "react-icons/bi";
@@ -82,12 +79,6 @@ const DetailTicket = () => {
 
   // console.log({ selectedAcara });
 
-  const getDataTickets = useCallback(() => {
-    dispatch(getTiketAcaraAction({ acara_id: selectedAcara?.id })).catch(
-      () => {}
-    );
-  }, [selectedAcara, dispatch]);
-
   const deleteDataTicket = useCallback(
     ({ tiketAcaraId }) => {
       dispatch(
@@ -97,9 +88,9 @@ const DetailTicket = () => {
     [selectedAcara]
   );
 
-  useEffect(() => {
-    getDataTickets();
-  }, [getDataTickets]);
+  // useEffect(() => {
+  //   getDataTickets();
+  // }, [getDataTickets]);
 
   return (
     <Table

@@ -12,8 +12,10 @@ import MainContentPenjualan from "../../../components/reporting/penjualan/main-c
 import { useDispatch, useSelector } from "react-redux";
 import { getPenyelenggaraAction } from "../../../store/features/management/penyelenggara";
 import { formatDate } from "../../../helpers/date-format";
+import { role_user } from "../../../helpers/status-data";
+import { parseJwt } from "../../../helpers/decode-token";
 
-export const ContextReportingPenjualan = createContext();
+export const ContextReportingPenjualan = createContext({});
 
 const ReportingPenjualan = () => {
   const [detailPenjualan, setDetailPenjualan] = useState({});
@@ -23,6 +25,8 @@ const ReportingPenjualan = () => {
     startDate: -1,
     endDate: -1,
   });
+
+  const userData = localStorage?.token ? parseJwt(localStorage.token) : {};
 
   const { penyelenggaraList } = useSelector((state) => state.penyelenggara);
 
@@ -39,7 +43,9 @@ const ReportingPenjualan = () => {
   }, []);
 
   useEffect(() => {
-    getPenyelenggara();
+    if (userData?.role === role_user.admin.value) {
+      getPenyelenggara();
+    }
   }, []);
 
   return (

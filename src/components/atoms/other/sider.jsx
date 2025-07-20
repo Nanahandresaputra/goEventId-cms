@@ -6,6 +6,8 @@ import { logoTransparent } from "../../../assets/images";
 import ManagementIcon from "../../../assets/icon/management";
 import ReportIcon from "../../../assets/icon/reporting";
 import { ContextApp } from "../../../layout";
+import { parseJwt } from "../../../helpers/decode-token";
+import { role_user } from "../../../helpers/status-data";
 
 const { Sider } = Layout;
 
@@ -20,6 +22,8 @@ const Asider = () => {
       onClick,
     };
   }
+
+  const userData = localStorage?.token ? parseJwt(localStorage.token) : {};
 
   const { setDataIndex } = useContext(ContextApp);
 
@@ -52,22 +56,24 @@ const Asider = () => {
             navigate("/desktop/manajemen-acara");
           },
         }),
-        getItem({
-          key: "penyelenggara",
-          label: "Penyelenggara",
-          onClick: () => {
-            setDataIndex(0);
-            navigate("/desktop/manajemen-penyelenggara");
-          },
-        }),
-        getItem({
-          key: "user",
-          label: "User",
-          onClick: () => {
-            setDataIndex(0);
-            navigate("/desktop/manajemen-user");
-          },
-        }),
+        userData?.role === role_user.admin.value &&
+          getItem({
+            key: "penyelenggara",
+            label: "Penyelenggara",
+            onClick: () => {
+              setDataIndex(0);
+              navigate("/desktop/manajemen-penyelenggara");
+            },
+          }),
+        userData?.role === role_user.admin.value &&
+          getItem({
+            key: "user",
+            label: "User",
+            onClick: () => {
+              setDataIndex(0);
+              navigate("/desktop/manajemen-user");
+            },
+          }),
       ],
     }),
     getItem({
