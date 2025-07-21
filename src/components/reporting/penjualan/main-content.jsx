@@ -117,9 +117,7 @@ const MainContentPenjualan = () => {
 
     return (
       <div className="flex items-center justify-between">
-        <p className="font-semibold col-span-4">
-          Grand Total Tiktet Terjual & Pendapatan
-        </p>
+        <p className="font-semibold col-span-4">Grand Total</p>
         {/* <p className="font-semibold col-span-1 text-end">{qty}</p> */}
         <p className="font-semibold col-span-1 text-end">
           Rp {formatter(total)}

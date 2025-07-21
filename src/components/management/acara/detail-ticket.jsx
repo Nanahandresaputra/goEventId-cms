@@ -4,8 +4,9 @@ import { ContextAcara } from "../../../pages/management/acara";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteTiketAcaraAction } from "../../../store/features/management/tiket-acara";
 import { formatter } from "../../../helpers/formatter";
-import { statusAcara } from "../../../helpers/status-data";
+import { role_user, statusAcara } from "../../../helpers/status-data";
 import { BiTrash } from "react-icons/bi";
+import { parseJwt } from "../../../helpers/decode-token";
 
 const DetailTicket = () => {
   const { selectedAcara, openModalTicket, setSelectedTiketAcara } =
@@ -16,6 +17,10 @@ const DetailTicket = () => {
   );
 
   const dispatch = useDispatch();
+
+  const userData = localStorage?.token ? parseJwt(localStorage.token) : {};
+
+  const getRole = userData?.role ?? "";
 
   const columns = [
     {
@@ -75,7 +80,9 @@ const DetailTicket = () => {
         );
       },
     },
-  ];
+  ].filter((data) =>
+    getRole === role_user.admin.value ? data : data.dataIndex !== "action"
+  );
 
   // console.log({ selectedAcara });
 

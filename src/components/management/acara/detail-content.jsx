@@ -5,8 +5,9 @@ import DetailTicket from "./detail-ticket";
 import { ContextAcara } from "../../../pages/management/acara";
 import { formatDate } from "../../../helpers/date-format";
 import FormTicket from "./form-ticket";
-import { statusAcara } from "../../../helpers/status-data";
+import { role_user, statusAcara } from "../../../helpers/status-data";
 import { useSelector } from "react-redux";
+import { parseJwt } from "../../../helpers/decode-token";
 
 const DetailContentAcara = () => {
   const {
@@ -22,7 +23,12 @@ const DetailContentAcara = () => {
   //   let e = document.createElement("div");
   //   e.innerHTML = content;
   //   return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+
   // };
+
+  const userData = localStorage?.token ? parseJwt(localStorage.token) : {};
+
+  const getRole = userData?.role ?? "";
 
   const items = [
     {
@@ -61,36 +67,38 @@ const DetailContentAcara = () => {
           </div>
         </div>
       ),
-      extra: (
-        <Popconfirm
-          title="Publish Acara"
-          description="Setelah Acara dipublish maka tidak dapat mengubah data Acara maupun Tiket!"
-          onConfirm={() =>
-            updateDataAcara(
-              { status: statusAcara.publish.value },
-              selectedAcara?.id
-            )
-          }
-          // onCancel={cancel}
-          okText="Publish"
-          cancelText="Batal"
-        >
-          <Button
-            type="primary"
-            disabled={selectedAcara?.status !== statusAcara.draft.value}
-            onClick={(event) => {
-              event.stopPropagation();
-            }}
-            loading={isLoadingOn}
+      ...(getRole === role_user.admin.value && {
+        extra: (
+          <Popconfirm
+            title="Publish Acara"
+            description="Setelah Acara dipublish maka tidak dapat mengubah data Acara maupun Tiket!"
+            onConfirm={() =>
+              updateDataAcara(
+                { status: statusAcara.publish.value },
+                selectedAcara?.id
+              )
+            }
+            // onCancel={cancel}
+            okText="Publish"
+            cancelText="Batal"
           >
-            {selectedAcara?.status === statusAcara.publish.value
-              ? "Published"
-              : selectedAcara?.status === statusAcara.expired.value
-              ? statusAcara.expired.label
-              : statusAcara.publish.label}
-          </Button>
-        </Popconfirm>
-      ),
+            <Button
+              type="primary"
+              disabled={selectedAcara?.status !== statusAcara.draft.value}
+              onClick={(event) => {
+                event.stopPropagation();
+              }}
+              loading={isLoadingOn}
+            >
+              {selectedAcara?.status === statusAcara.publish.value
+                ? "Published"
+                : selectedAcara?.status === statusAcara.expired.value
+                ? statusAcara.expired.label
+                : statusAcara.publish.label}
+            </Button>
+          </Popconfirm>
+        ),
+      }),
     },
     {
       key: "2",
@@ -112,18 +120,20 @@ const DetailContentAcara = () => {
           <DetailTicket />
         </div>
       ),
-      extra: selectedAcara?.status === statusAcara.draft.value && (
-        <Button
-          type="primary"
-          onClick={(event) => {
-            event.stopPropagation();
-            openModalTicket();
-            setSelectedTiketAcara({});
-          }}
-        >
-          Tambah Tiket
-        </Button>
-      ),
+      ...(getRole === role_user.admin.value && {
+        extra: selectedAcara?.status === statusAcara.draft.value && (
+          <Button
+            type="primary"
+            onClick={(event) => {
+              event.stopPropagation();
+              openModalTicket();
+              setSelectedTiketAcara({});
+            }}
+          >
+            Tambah Tiket
+          </Button>
+        ),
+      }),
     },
   ];
 

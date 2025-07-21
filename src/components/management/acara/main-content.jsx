@@ -8,10 +8,11 @@ import { formatDate } from "../../../helpers/date-format";
 import StatusAcaraTag from "../../atoms/generate-tag/status-acara";
 import { ContextApp } from "../../../layout";
 import FormAcara from "./form-acara";
-import { statusAcara } from "../../../helpers/status-data";
+import { role_user, statusAcara } from "../../../helpers/status-data";
 import { BiEdit, BiTrash } from "react-icons/bi";
 import dayjs from "dayjs";
 import "dayjs/locale/id";
+import { parseJwt } from "../../../helpers/decode-token";
 
 const MainContentAcara = () => {
   const { acaraList, isLoadingGet, isLoadingOn } = useSelector(
@@ -46,6 +47,9 @@ const MainContentAcara = () => {
 
     return filterData;
   }, [acaraList, filterCategory, wildSearch, filterStatus]);
+
+  const userData = localStorage?.token ? parseJwt(localStorage.token) : {};
+  const getRole = userData?.role ?? "";
 
   const columns = [
     {
@@ -127,12 +131,16 @@ const MainContentAcara = () => {
         );
       },
     },
-  ].map((clm) => ({
-    ...clm,
-    title: <span style={{ whiteSpace: "nowrap" }}>{clm.title}</span>,
-    className: "whitespace-nowrap",
-    width: getColumnWidth(clm?.dataIndex, dataSource, clm?.title),
-  }));
+  ]
+    .map((clm) => ({
+      ...clm,
+      title: <span style={{ whiteSpace: "nowrap" }}>{clm.title}</span>,
+      className: "whitespace-nowrap",
+      width: getColumnWidth(clm?.dataIndex, dataSource, clm?.title),
+    }))
+    .filter((data) =>
+      getRole === role_user.admin.value ? data : data.dataIndex !== "action"
+    );
 
   const dispatch = useDispatch();
 
