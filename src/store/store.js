@@ -7,6 +7,7 @@ import usersReducer from "./features/management/users.js";
 import penjualanReducer from "./features/reporting/penjualan.js";
 import kategoriReducer from "./features/management/kategori.js";
 import regionalReducer from "./features/management/regional.js";
+import checkInReducer from "./features/check-in/check-in.js";
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   penjualan: penjualanReducer,
   kategori: kategoriReducer,
   regional: regionalReducer,
+  checkIn: checkInReducer,
 });
 
 export const store = configureStore({

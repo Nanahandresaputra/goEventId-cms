@@ -6,6 +6,9 @@ import DesktopApp from "../layout";
 import ManagementPenyelenggara from "../pages/management/penyelenggara";
 import ManagementUsers from "../pages/management/user";
 import ReportingPenjualan from "../pages/reporting/penjualan";
+import CheckIn from "../pages/check-in";
+import ScanQr from "../pages/check-in/scan-qr";
+import SuccessCheckIn from "../pages/check-in/success-check";
 
 const PrivateRouterDesktop = ({ children }) => {
   const token = localStorage.token;
@@ -52,11 +55,28 @@ const AppRouter = () => {
       ],
     },
   ];
+
+  const checkInRoutes = [
+    {
+      path: "/check-in",
+      element: <CheckIn />,
+    },
+    {
+      path: "/check-in/scan",
+      element: <ScanQr />,
+    },
+    {
+      path: "/check-in/success",
+      element: <SuccessCheckIn />,
+    },
+  ];
+
   const routers = useRoutes([
     {
       path: "/",
       element: <Navigate to={"/login"} />,
     },
+
     {
       path: "/login",
       element: (
@@ -65,6 +85,7 @@ const AppRouter = () => {
         </PrivateAuth>
       ),
     },
+    ...checkInRoutes,
     ...desktopRoutes,
   ]);
 

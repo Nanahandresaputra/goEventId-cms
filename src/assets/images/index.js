@@ -5,6 +5,7 @@ import bannerDummy from "./banner-dummy.jpg";
 import mapDummy from "./map-dummy.png";
 import logoTransparent from "./logo-transparent.png";
 import deleteWarn from "./delete-warn.png";
+import checkImg from "./check-img.png";
 
 export {
   bgWave,
@@ -14,4 +15,5 @@ export {
   mapDummy,
   logoTransparent,
   deleteWarn,
+  checkImg,
 };
