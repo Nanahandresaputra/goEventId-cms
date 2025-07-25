@@ -23,7 +23,6 @@ const Login = () => {
       .then((body) => {
         dispatch(loginAction({ body }))
           .then((res) => {
-            console.log("res validate -->", res);
             if (res?.meta?.requestStatus === "fulfilled") {
               navigate("/desktop/manajemen-acara");
             }

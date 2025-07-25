@@ -9,4 +9,5 @@ export const endpoints = {
   kategori: "kategori",
   provinsi: "provinsi",
   kabupatenkota: "kabupatenkota",
+  checkIn: "check-in",
 };

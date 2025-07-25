@@ -20,7 +20,11 @@ export const interceptorsUtils = () => {
         !equalsErr &&
         !res.config.url.includes("goEventId/api/v1/auth/login")
       ) {
-        if (res.config.method === "post" && res.data?.statusCode === 200) {
+        if (
+          res.config.method === "post" &&
+          res.data?.statusCode === 200 &&
+          !res.config.url.includes("goEventId/api/v1/check-in")
+        ) {
           notifSuccess({ method: "create" });
         } else if (
           res.config.method === "patch" &&
@@ -33,7 +37,8 @@ export const interceptorsUtils = () => {
         ) {
           notifSuccess({ method: "delete" });
         } else {
-          toast.error(res.data?.message?.toString());
+          res.data?.message !== "success" &&
+            toast.error(res.data?.message?.toString());
         }
       }
 

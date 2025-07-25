@@ -18,7 +18,7 @@ export const checkInAction = createAsyncThunk(
     return await new Promise((resolve, reject) => {
       serviceApi({
         withToken: true,
-        endpoint: endpoints.acara,
+        endpoint: endpoints.checkIn,
         method: httpMethod.post,
         body,
       })
